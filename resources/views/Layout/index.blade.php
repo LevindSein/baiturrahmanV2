@@ -296,15 +296,7 @@
                 <!--end::Header-->
                 <!--begin::Content-->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                    <!--begin::Entry-->
-                    <div class="d-flex flex-column-fluid">
-                        <!--begin::Container-->
-                        <div class="container">
-                            @yield('content-body')
-                        </div>
-                        <!--end::Container-->
-                    </div>
-                    <!--end::Entry-->
+                    @yield('content-body')
                 </div>
                 <!--end::Content-->
                 <!--begin::Footer-->
@@ -398,8 +390,6 @@
     <script>
         var KTAppSettings = {!! json_encode(config('layout.js'), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) !!};
     </script>
-
-
 
     @yield('content-modal')
 

@@ -87,6 +87,7 @@ return [
             'vendor/block-ui/jquery.blockUI.js',
             'vendor/select2/dist/js/select2.min.js',
             'vendor/intTelInput/build/js/intlTelInput.js',
+            'js/custom.js',
         ],
     ],
 
