@@ -5406,14 +5406,19 @@ a.close.disabled {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 1000;
   width: 100vw;
   height: 100vh;
-  background-color: #000000; }
-  .modal-backdrop.fade {
-    opacity: 0; }
-  .modal-backdrop.show {
-    opacity: 0.2; }
+  background-color: #000000;
+}
+
+.modal-backdrop.fade {
+    opacity: 0;
+}
+
+.modal-backdrop.show {
+    opacity: 0.2;
+}
 
 .modal-header {
   display: -webkit-box;

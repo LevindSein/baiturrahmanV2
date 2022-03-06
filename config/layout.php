@@ -80,9 +80,9 @@ return [
             'vendor/toastr/toastr.min.css',
         ],
         'js' => [
+            'js/jQuery.min.js',
             'metronic/assets/plugins/global/plugins.bundle.js',
             'metronic/assets/js/scripts.bundle.js',
-            'js/jQuery.min.js',
             'vendor/toastr/toastr.min.js',
             'vendor/block-ui/jquery.blockUI.js',
             'vendor/select2/dist/js/select2.min.js',
