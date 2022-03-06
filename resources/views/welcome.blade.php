@@ -139,6 +139,7 @@
                 else{
                     toastr.error("System error.");
                     console.log(data);
+                    location.reload();
                 }
             },
             complete:function(data){
