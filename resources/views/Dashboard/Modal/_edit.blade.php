@@ -91,6 +91,10 @@ $(".edit-rumus").click(function(e){
         complete:function(data){
             $.unblockUI();
             $("#edit-modal").modal("show");
+
+            $('#edit-modal').on('shown.bs.modal', function() {
+                $("#edit-satuan").focus();
+            });
         }
     });
 })

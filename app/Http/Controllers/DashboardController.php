@@ -19,7 +19,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $data = Rumusan::get();
+        $data = Rumusan::orderBy('kategori', 'asc')->get();
         return view('Dashboard.index', [
             'data'  => $data
         ]);
@@ -46,10 +46,33 @@ class DashboardController extends Controller
         if($request->ajax()){
             $request->validate([
                 'tambah_satuan' => 'required|max:100',
+                'tambah_alternatif' => 'required|max:100',
             ]);
 
+            $i = 0;
+            $data = Rumusan::select('id', 'kategori')->get();
+
+            if($data->count() == 10){
+                return response()->json(['warning' => "Kategori terlalu banyak, harap hapus sebagian."]);
+            }
+
+            $kategori = array();
+
+            foreach ($data as $d) {
+                $kategori[$i] = $d->kategori;
+                $i++;
+            }
+
+            $data = $kategori;
+
+            $kategori = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+            $data = array_diff($kategori, $data);
+
+            $kategori = reset($data);
+
             Rumusan::create([
-                'kategori' => 1,
+                'kategori' => $kategori,
                 'rumus'    => json_encode([
                     'satuan'     => $request->tambah_satuan,
                     'alternatif' => $request->tambah_alternatif,
@@ -113,6 +136,11 @@ class DashboardController extends Controller
             if($id == 'all'){
 
             } else {
+                $request->validate([
+                    'edit_satuan' => 'required|max:100',
+                    'edit_alternatif' => 'required|max:100',
+                ]);
+
                 try {
                     $decrypted = Crypt::decrypt($id);
                 } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
@@ -163,6 +191,14 @@ class DashboardController extends Controller
             }
 
             $data->delete();
+
+            // $reset = Rumusan::select('id','kategori')->get();
+            // $i = 0;
+            // foreach ($reset as $d) {
+            //     $i++;
+            //     $d->kategori = $i;
+            //     $d->save();
+            // }
 
             return response(['success' => "Data berhasil dihapus."]);
         }

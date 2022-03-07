@@ -36,6 +36,10 @@
 <script>
 $("#add").click(function(){
     $("#tambah-modal").modal("show");
+
+    $('#tambah-modal').on('shown.bs.modal', function() {
+        $("#tambah-satuan").focus();
+    });
 })
 
 $('#tambah-form').on('submit', function(e){

@@ -33,7 +33,7 @@ class RumusanSeeder extends Seeder
                 'kategori' => 2,
                 'rumus'    => json_encode([
                     'satuan'     => "Kilogram",
-                    'alternatif' => "KG",
+                    'alternatif' => "Kg",
                     'rupiah'     => null,
                     'jiwa'       => "2.5"
                 ]),

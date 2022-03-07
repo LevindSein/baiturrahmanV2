@@ -34,7 +34,7 @@ Rumusan
                                     <div class="form-group row">
                                         <div class="input-group col-md-12">
                                             <div class="input-group-prepend col-3">
-                                                <span class="input-group-text col-12">1 {{$rumus->satuan}} :</span>
+                                                <span class="input-group-text col-12">1 {{$rumus->alternatif}} :</span>
                                             </div>
                                             <input type="text" class="number form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Nilai Rupiah" value="{{($rumus->rupiah == null) ? '' : number_format($rumus->rupiah, 0, ',', '.')}}" />
                                             <div class="input-group-append">
@@ -49,7 +49,7 @@ Rumusan
                                             </div>
                                             <input type="text" class="float form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Jumlah {{$rumus->satuan}}" value="{{($rumus->jiwa == null) ? '' : number_format($rumus->jiwa, 2, ',', '.')}}" />
                                             <div class="input-group-append">
-                                                <span class="input-group-text">{{$rumus->satuan}}</span>
+                                                <span class="input-group-text">{{$rumus->alternatif}}</span>
                                             </div>
                                         </div>
                                     </div>
