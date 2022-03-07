@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -135,6 +136,43 @@ class DashboardController extends Controller
         if($request->ajax()){
             if($id == 'all'){
 
+                foreach ($request->rumus_id_hidden as $rumus_id) {
+                    $rumus_rupiah = "rumus_rupiah_$rumus_id";
+                    $rumus_satuan = "rumus_satuan_$rumus_id";
+
+                    $rupiah = "rumus_rupiah_$rumus_id";
+                    $data[$rumus_rupiah] = intval(str_replace('.', '', $request->$rupiah));
+                    $satuan = "rumus_satuan_$rumus_id";
+                    $satuan = str_replace('.', '', $request->$satuan);
+                    $data[$rumus_satuan] = intval(str_replace(',', '', $satuan));
+
+                    Validator::make($data, [
+                        $rumus_rupiah => 'required|numeric|lte:999999999',
+                        $rumus_satuan => 'required|numeric|lte:99999999999',
+                    ])->validate();
+
+                    try{
+                        $rumus = Rumusan::findOrFail($rumus_id);
+                    } catch (ModelNotFoundException $e) {
+                        return response()->json(['error' => "Data lost."]);
+                    }
+
+                    $json = json_decode($rumus->rumus);
+
+                    $rupiah = "rumus_rupiah_$rumus_id";
+                    $json->rupiah = intval(str_replace('.', '', $request->$rupiah));
+                    $satuan = "rumus_satuan_$rumus_id";
+                    $satuan = str_replace('.', '', $request->$satuan);
+                    $json->jiwa = floatval(str_replace(',', '.', $satuan));
+
+                    $json = json_encode($json);
+
+                    $rumus->rumus = $json;
+
+                    $rumus->save();
+                }
+
+                return response()->json(['success' => "Data berhasil disimpan."]);
             } else {
                 $request->validate([
                     'edit_satuan' => 'required|max:100',

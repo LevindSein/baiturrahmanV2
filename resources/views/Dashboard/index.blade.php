@@ -26,8 +26,8 @@ Rumusan
                                     <div class="d-flex justify-content-between">
                                         <h3 class="text-primary">Kategori {{$d->kategori}}</h3>
                                         <div>
-                                            <a href="javascript:void(0)" class="edit-rumus mr-2" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-edit text-primary"></i></a>
-                                            <a href="javascript:void(0)" class="hapus-rumus" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-trash text-danger"></i></a>
+                                            <a href="javascript:void(0)"tabindex="-1" class="edit-rumus mr-2" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-edit text-primary"></i></a>
+                                            <a href="javascript:void(0)"tabindex="-1" class="hapus-rumus" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-trash text-danger"></i></a>
                                         </div>
                                     </div>
                                     <hr>
@@ -36,7 +36,7 @@ Rumusan
                                             <div class="input-group-prepend col-3">
                                                 <span class="input-group-text col-12">1 {{$rumus->alternatif}} :</span>
                                             </div>
-                                            <input type="text" class="number form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Nilai Rupiah" value="{{($rumus->rupiah == null) ? '' : number_format($rumus->rupiah, 0, ',', '.')}}" />
+                                            <input required type="text" name="rumus_rupiah_{{$d->id}}" class="number form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Nilai Rupiah" value="{{($rumus->rupiah == null) ? '' : number_format($rumus->rupiah, 0, ',', '.')}}" />
                                             <div class="input-group-append">
                                                 <span class="input-group-text">Rupiah</span>
                                             </div>
@@ -47,13 +47,14 @@ Rumusan
                                             <div class="input-group-prepend col-3">
                                                 <span class="input-group-text col-12">1 Jiwa :</span>
                                             </div>
-                                            <input type="text" class="float form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Jumlah {{$rumus->satuan}}" value="{{($rumus->jiwa == null) ? '' : number_format($rumus->jiwa, 2, ',', '.')}}" />
+                                            <input required type="text" name="rumus_satuan_{{$d->id}}" class="float form-control" maxlength="11" autocomplete="off" placeholder="Masukkan Jumlah {{$rumus->satuan}}" value="{{($rumus->jiwa == null) ? '' : number_format($rumus->jiwa, 2, ',', '.')}}" />
                                             <div class="input-group-append">
                                                 <span class="input-group-text">{{$rumus->alternatif}}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="rumus_id_hidden[]" value="{{$d->id}}" />
                             @endforeach
                             </div>
 
@@ -141,7 +142,14 @@ $('#rumus-form').on('submit', function(e){
             }
         },
         complete:function(data){
-            $.unblockUI();
+            if(JSON.parse(data.responseText).success){
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+            setTimeout(() => {
+                $.unblockUI();
+            }, 1000);
         }
     });
 });
