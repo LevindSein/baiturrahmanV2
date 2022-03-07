@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Crypt;
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Models\Rumusan;
 
 class DashboardController extends Controller
@@ -40,7 +44,7 @@ class DashboardController extends Controller
     public function store(Request $request)
     {
         if($request->ajax()){
-            return response()->json(['success' => "Data berhasil disimpan."]);
+            return response()->json(['success' => "Data berhasil ditambah."]);
         }
     }
 
@@ -63,7 +67,23 @@ class DashboardController extends Controller
      */
     public function edit($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try{
+                $data = Rumusan::findOrFail($decrypted);
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data = json_decode($data->rumus);
+
+            return response()->json(['success' => $data]);
+        }
     }
 
     /**
@@ -75,7 +95,35 @@ class DashboardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->ajax()){
+            if($id == 'all'){
+
+            } else {
+                try {
+                    $decrypted = Crypt::decrypt($id);
+                } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    return response()->json(['error' => "Data tidak valid."]);
+                }
+
+                try{
+                    $data = Rumusan::findOrFail($decrypted);
+                } catch (ModelNotFoundException $e) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+
+                $rumus = json_decode($data->rumus);
+
+                $data->rumus = json_encode([
+                    'satuan' => $request->edit_satuan,
+                    'rupiah' => $rumus->rupiah,
+                    'jiwa'   => $rumus->jiwa
+                ]);
+
+                $data->save();
+
+                return response()->json(['success' => "Data berhasil disimpan."]);
+            }
+        }
     }
 
     /**
@@ -86,6 +134,22 @@ class DashboardController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try{
+                $data = Rumusan::findOrFail($decrypted);
+            } catch (ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->deleted();
+
+            return response(['success' => "Data berhasil dihapus."]);
+        }
     }
 }

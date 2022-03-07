@@ -1,4 +1,6 @@
-<!--begin::Modal-->
+@include('Layout.Modal._hapus')
+
+<!--begin::Profil-Modal-->
 <div class="modal fade" id="profil-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="profil-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -49,9 +51,9 @@
         </div>
     </div>
 </div>
-<!--end::Modal-->
+<!--end::Profil-Modal-->
 
-<!--begin::Script-->
+<!--begin::Profil-Javascript-->
 <script>
     $("#profil-setting").click(function(){
         $.ajax({
@@ -197,4 +199,4 @@
         });
     });
 </script>
-<!--end::Script-->
+<!--end::Profil-Javascript-->

@@ -5,31 +5,7 @@ Rumusan
 @endsection
 
 @section('content-body')
-<!--begin::Subheader-->
-<div class="subheader py-4 py-lg-6 subheader-transparent" id="kt_subheader">
-    <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-        <!--begin::Info-->
-        <div class="d-flex align-items-center flex-wrap mr-1">
-            <!--begin::Page Heading-->
-            <div class="d-flex align-items-baseline flex-wrap mr-5">
-                <!--begin::Page Title-->
-                <h1 class="text-dark font-weight-bold my-1 mr-5">Rumusan</h1>
-                <!--end::Page Title-->
-            </div>
-            <!--end::Page Heading-->
-        </div>
-        <!--end::Info-->
-        <!--begin::Toolbar-->
-        <div class="d-flex align-items-center">
-            <!--begin::Actions-->
-            <a href="#" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i> Kategori</a>
-            <a href="#" class="btn btn-light-danger font-weight-bolder btn-sm"><i class="fas fa-trash fa-sm"></i> Kategori</a>
-            <!--end::Actions-->
-        </div>
-        <!--end::Toolbar-->
-    </div>
-</div>
-<!--end::Subheader-->
+@include('Dashboard.Partial._subheader')
 
 <div class="d-flex flex-column-fluid">
     <div class="container">
@@ -38,25 +14,22 @@ Rumusan
                 <!--begin::Card-->
                 <div class="card card-custom">
                     <div class="card-body">
-                        <form id="rumusan-form">
-                            <div class="form-group">
-                                <div class="alert alert-custom alert-default" role="alert">
-                                    <div class="alert-icon">
-                                        <i class="fas fa-info fa-md"></i>
-                                    </div>
-                                    <div class="alert-text">
-                                        Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras (Bahan Pokok)</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.
-                                    </div>
-                                </div>
-                            </div>
+                        @include('Dashboard.Partial._alert', ['text' => 'Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras (Bahan Pokok)</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.'])
 
+                        <form id="rumus-form">
                             <div class="row">
                             @foreach($data as $d)
                             @php
                                 $rumus = json_decode($d->rumus);
                             @endphp
                                 <div class="col-md-6">
-                                    <h3 class="text-primary">Kategori {{$d->kategori}}</h3>
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="text-primary">Kategori {{$d->kategori}}</h3>
+                                        <div>
+                                            <a href="javascript:void(0)" class="edit-rumus mr-2" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-edit text-primary"></i></a>
+                                            <a href="javascript:void(0)" class="hapus-rumus" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-trash text-danger"></i></a>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <div class="form-group row">
                                         <div class="input-group col-md-12">
@@ -98,11 +71,12 @@ Rumusan
 @endsection
 
 @section('content-modal')
+@include('Dashboard.Partial._modal')
 @endsection
 
 @section('content-js')
 <script>
-$('#rumusan-form').on('submit', function(e){
+$('#rumus-form').on('submit', function(e){
     e.preventDefault();
 
     $.ajaxSetup({
@@ -112,9 +86,9 @@ $('#rumusan-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/dashboard",
+        url: "/production/dashboard/all",
         cache: false,
-        method: "POST",
+        method: "PUT",
         data: $(this).serialize(),
         dataType: "json",
         beforeSend:function(){
