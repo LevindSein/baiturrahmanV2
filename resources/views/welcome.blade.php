@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('css/welcome.css')}}">
 
     {{-- Font Awesome --}}
-	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{asset('vendor/fontawesome/css/all.min.css')}}">
 
     {{-- Toastr --}}
     <link rel="stylesheet" type="text/css" href="{{asset('vendor/toastr/toastr.min.css')}}">
@@ -150,7 +150,8 @@
     });
     </script>
 
-    @include('Message.toastr')
+    @include('Layout.Partial._message')
+
 </body>
 
 </html>

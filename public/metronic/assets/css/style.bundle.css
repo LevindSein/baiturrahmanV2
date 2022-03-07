@@ -63760,7 +63760,8 @@ body {
 
 @media (min-width: 992px) {
   .content {
-    padding: 25px 0; }
+    padding: 0 0 25px 0;
+}
     .aside-enabled .content .content-wrapper {
       padding-left: 25px; } }
 

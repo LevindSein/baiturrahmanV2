@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Rumusan;
+
 class DashboardController extends Controller
 {
     /**
@@ -13,7 +15,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('Dashboard.index');
+        $data = Rumusan::get();
+        return view('Dashboard.index', [
+            'data'  => $data
+        ]);
     }
 
     /**
@@ -34,7 +39,9 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->ajax()){
+            return response()->json(['success' => "Data berhasil disimpan."]);
+        }
     }
 
     /**

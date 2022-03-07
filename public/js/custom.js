@@ -12,7 +12,7 @@ $(document).ready(function() {
 });
 
 $(".number").on('input keydown', function (e) {
-    if(e.which >= 37 && e.which <= 40) e.preventDefault();
+    if(e.which >= 37 && e.which <= 40 || e.which == 188 || e.which == 190) e.preventDefault();
 
     if (/^[0-9\.]+$/.test($(this).val())) {
         $(this).val(parseFloat($(this).val().replace(/\./g, '')).toLocaleString('id-ID'));
@@ -31,7 +31,7 @@ $('.hour').on('input', function (e) {
 });
 
 $(".float").on('input keydown', function (e) {
-    if(e.which >= 37 && e.which <= 40) e.preventDefault();
+    if(e.which >= 37 && e.which <= 40 || e.which >= 65 && e.which <= 90) e.preventDefault();
 
     if (/^[0-9\.]+$/.test($(this).val())) {
         $(this).val(parseFloat($(this).val().replace(/\./g, '')).toLocaleString('id-ID'));
