@@ -124,6 +124,13 @@
         }
     });
 
+    $("#profil-form").keypress(function(e) {
+        if(e.which == 13) {
+            $('#profil-form').submit();
+            return false;
+        }
+    });
+
     $('#profil-form').on('submit', function(e){
         e.preventDefault();
 

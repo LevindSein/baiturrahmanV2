@@ -99,6 +99,13 @@ $(".edit-rumus").click(function(e){
     });
 })
 
+$("#edit-form").keypress(function(e) {
+    if(e.which == 13) {
+        $('#edit-form').submit();
+        return false;
+    }
+});
+
 $('#edit-form').on('submit', function(e){
     e.preventDefault();
 

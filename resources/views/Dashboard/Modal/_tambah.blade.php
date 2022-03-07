@@ -42,6 +42,13 @@ $("#add").click(function(){
     });
 })
 
+$("#tambah-form").keypress(function(e) {
+    if(e.which == 13) {
+        $('#tambah-form').submit();
+        return false;
+    }
+});
+
 $('#tambah-form').on('submit', function(e){
     e.preventDefault();
 
