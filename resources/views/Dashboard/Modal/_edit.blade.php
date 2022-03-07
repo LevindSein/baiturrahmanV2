@@ -12,7 +12,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Satuan <span class="text-danger">*</span></label>
-                        <input required type="text" id="edit-satuan" name="edit_satuan" maxlength="100" class="form-control" placeholder="Liter / Kilogram / Lainnya . ." />
+                        <input required type="text" id="edit-satuan" name="edit_satuan" autocomplete="off" maxlength="100" class="form-control" placeholder="Liter / Kilogram / Lainnya . ." />
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Alternatif <span class="text-danger">*</span></label>
+                        <input required type="text" id="edit-alternatif" name="edit_alternatif" autocomplete="off" maxlength="100" class="form-control" placeholder="Ltr / Kg / Lainnya . ." />
                     </div>
                     <div class="form-group">
                         <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
@@ -61,6 +65,7 @@ $(".edit-rumus").click(function(e){
         {
             if(data.success){
                 $("#edit-satuan").val(data.success.satuan);
+                $("#edit-alternatif").val(data.success.alternatif);
             }
 
             if(data.info){
@@ -155,13 +160,15 @@ $('#edit-form').on('submit', function(e){
             }
         },
         complete:function(data){
-            $.unblockUI();
             if(JSON.parse(data.responseText).success){
                 $('#edit-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
             }
+            setTimeout(() => {
+                $.unblockUI();
+            }, 1000);
         }
     });
 });

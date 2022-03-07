@@ -1,6 +1,4 @@
-<!--
-Modal ada di Layout.Modal._hapus
--->
+@include('Layout.Modal._hapus')
 
 <!--begin::Javascript-->
 <script>
@@ -26,6 +24,7 @@ $('#hapus-form').on('submit', function(e){
         url: "/production/dashboard/" + id,
         cache: false,
         method: "DELETE",
+        data: $(this).serialize(),
         dataType: "json",
         beforeSend:function(){
             $.blockUI({
@@ -70,13 +69,15 @@ $('#hapus-form').on('submit', function(e){
             console.log(data);
         },
         complete:function(data){
-            $.unblockUI();
             if(JSON.parse(data.responseText).success){
                 $('#hapus-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
             }
+            setTimeout(() => {
+                $.unblockUI();
+            }, 1000);
         }
     });
 });

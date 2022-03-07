@@ -44,6 +44,20 @@ class DashboardController extends Controller
     public function store(Request $request)
     {
         if($request->ajax()){
+            $request->validate([
+                'tambah_satuan' => 'required|max:100',
+            ]);
+
+            Rumusan::create([
+                'kategori' => 1,
+                'rumus'    => json_encode([
+                    'satuan'     => $request->tambah_satuan,
+                    'alternatif' => $request->tambah_alternatif,
+                    'rupiah'     => null,
+                    'jiwa'       => null
+                ])
+            ]);
+
             return response()->json(['success' => "Data berhasil ditambah."]);
         }
     }
@@ -114,9 +128,10 @@ class DashboardController extends Controller
                 $rumus = json_decode($data->rumus);
 
                 $data->rumus = json_encode([
-                    'satuan' => $request->edit_satuan,
-                    'rupiah' => $rumus->rupiah,
-                    'jiwa'   => $rumus->jiwa
+                    'satuan'     => $request->edit_satuan,
+                    'alternatif' => $request->edit_alternatif,
+                    'rupiah'     => $rumus->rupiah,
+                    'jiwa'       => $rumus->jiwa
                 ]);
 
                 $data->save();
@@ -147,7 +162,7 @@ class DashboardController extends Controller
                 return response()->json(['error' => "Data lost."]);
             }
 
-            $data->deleted();
+            $data->delete();
 
             return response(['success' => "Data berhasil dihapus."]);
         }

@@ -12,7 +12,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Satuan <span class="text-danger">*</span></label>
-                        <input required type="text" id="tambah-satuan" name="tambah_satuan" maxlength="100" class="form-control" placeholder="Liter / Kilogram / Lainnya . ." />
+                        <input required type="text" id="tambah-satuan" name="tambah_satuan" autocomplete="off" maxlength="100" class="form-control" placeholder="Liter / Kilogram / Lainnya . ." />
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Alternatif <span class="text-danger">*</span></label>
+                        <input required type="text" id="tambah-alternatif" name="tambah_alternatif" autocomplete="off" maxlength="100" class="form-control" placeholder="Ltr / Kg / Lainnya . ." />
                     </div>
                     <div class="form-group">
                         <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
@@ -99,13 +103,15 @@ $('#tambah-form').on('submit', function(e){
             }
         },
         complete:function(data){
-            $.unblockUI();
             if(JSON.parse(data.responseText).success){
                 $('#tambah-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
             }
+            setTimeout(() => {
+                $.unblockUI();
+            }, 1000);
         }
     });
 });
