@@ -107,7 +107,7 @@
                             <!--begin::Nav-->
                             <ul class="menu-nav">
                                 <li class="menu-item menu-item-active" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                    <a href="{{url('production/dashboard')}}" class="menu-link">
                                         <span class="menu-text">Rumusan</span>
                                     </a>
                                 </li>
@@ -220,12 +220,12 @@
                             <!--begin::Nav-->
                             <ul class="menu-nav">
                                 <li class="menu-item menu-item-active" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                    <a href="{{url('production/users')}}" class="menu-link">
                                         <span class="menu-text">Aktif</span>
                                     </a>
                                 </li>
                                 <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                    <a href="{{url('production/users/nonactive')}}" class="menu-link">
                                         <span class="menu-text">Nonaktif</span>
                                     </a>
                                 </li>

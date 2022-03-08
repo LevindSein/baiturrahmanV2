@@ -1,7 +1,7 @@
 @extends('Layout.index')
 
 @section('content-title')
-Rumusan
+@include('Dashboard.Partial._title')
 @endsection
 
 @section('content-body')

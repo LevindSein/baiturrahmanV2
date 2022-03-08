@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +32,7 @@ Route::middleware('checkauth')->group(function(){
         Route::resource('dashboard', DashboardController::class);
 
         Route::resource('profile', ProfileController::class);
+
+        Route::resource('users', UserController::class);
     });
 });
