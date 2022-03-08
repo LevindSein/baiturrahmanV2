@@ -15,7 +15,7 @@
                 <ul class="header-tabs nav align-self-end font-size-lg" role="tablist">
                     <!--begin::Item-->
                     <li class="nav-item">
-                        <a href="javascript:void(0)" class="nav-link py-4 px-6 active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Beranda</a>
+                        <a href="javascript:void(0)" class="nav-link py-4 px-6 {{ (request()->is('production/dashboard*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Beranda</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -35,7 +35,7 @@
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item">
-                        <a href="javascript:void(0)" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
+                        <a href="javascript:void(0)" class="nav-link py-4 px-6 {{ (request()->is('production/users*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
                     </li>
                     <!--end::Item-->
                 </ul>
@@ -73,7 +73,7 @@
                 <ul class="header-tabs p-5 p-lg-0 d-flex d-lg-none nav nav-bold nav-tabs" role="tablist">
                     <!--begin::Item-->
                     <li class="nav-item mr-2">
-                        <a href="javascript:void(0)" class="nav-link btn btn-clean active" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Beranda</a>
+                        <a href="javascript:void(0)" class="nav-link btn btn-clean {{ (request()->is('production/dashboard*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_1" role="tab">Beranda</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -93,7 +93,7 @@
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item">
-                        <a href="javascript:void(0)" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
+                        <a href="javascript:void(0)" class="nav-link btn btn-clean {{ (request()->is('production/users*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
                     </li>
                     <!--end::Item-->
                 </ul>
@@ -101,12 +101,12 @@
                 <!--begin::Tab Content-->
                 <div class="tab-content">
                     <!--begin::Tab Pane-->
-                    <div class="tab-pane py-5 p-lg-0 show active" id="kt_header_tab_1">
+                    <div class="tab-pane py-5 p-lg-0 {{ (request()->is('production/dashboard*')) ? 'show active' : '' }}" id="kt_header_tab_1">
                         <!--begin::Menu-->
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item menu-item-active" aria-haspopup="true">
+                                <li class="menu-item {{ (request()->is('production/dashboard')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                     <a href="{{url('production/dashboard')}}" class="menu-link">
                                         <span class="menu-text">Rumusan</span>
                                     </a>
@@ -214,18 +214,18 @@
                     </div>
                     <!--end::Tab Pane-->
                     <!--begin::Tab Pane-->
-                    <div class="tab-pane p-5 p-lg-0 justify-content-between" id="kt_header_tab_5">
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between {{ (request()->is('production/users*')) ? 'show active' : '' }}" id="kt_header_tab_5">
                         <!--begin::Menu-->
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item menu-item-active" aria-haspopup="true">
+                                <li class="menu-item {{ (request()->is('production/users')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                     <a href="{{url('production/users')}}" class="menu-link">
                                         <span class="menu-text">Aktif</span>
                                     </a>
                                 </li>
                                 <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="{{url('production/users/nonactive')}}" class="menu-link">
+                                    <a href="javascript:void(0)" class="menu-link">
                                         <span class="menu-text">Nonaktif</span>
                                     </a>
                                 </li>
