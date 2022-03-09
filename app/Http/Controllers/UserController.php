@@ -31,8 +31,9 @@ class UserController extends Controller
                 ->addColumn('action', function($data){
                     $button = '';
                     if(Auth::user()->id != $data->id){
-                        $button  = '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-key"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-power-off"></i></a>';
+                        $button  = '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-power-off"></i></a>';
                     }
                     return $button;
                 })
@@ -84,6 +85,7 @@ class UserController extends Controller
             $request->validate([
                 'tambah_username' => 'required|max:100|unique:App\Models\User,username',
                 'tambah_name' => 'required|max:100',
+                'tambah_level' => 'required|digits_between:1,2'
             ]);
 
             User::insert([
@@ -117,7 +119,15 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            return response()->json(['success' => $data]);
+        }
     }
 
     /**
@@ -129,7 +139,25 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->ajax()){
+            $request->validate([
+                'edit_name' => 'required|max:100',
+                'edit_level' => 'required|digits_between:1,2'
+            ]);
+
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->update([
+                'name'     => $request->edit_name,
+                'level'    => $request->edit_level,
+            ]);
+
+            return response()->json(['success' => "Data berhasil disimpan."]);
+        }
     }
 
     /**

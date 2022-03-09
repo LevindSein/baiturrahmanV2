@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group">
                         <label>Level Pengguna <span class="text-danger">*</span></label>
-                        <select class="form-control" id="tambah-level" name="tambah_level">
+                        <select required class="form-control" id="tambah-level" name="tambah_level">
                             <option value="2">Admin</option>
                             <option value="1">Super Admin</option>
                         </select>
@@ -41,7 +41,7 @@
 
 <!--begin::Javascript-->
 <script>
-function init(){
+function tambah_init(){
     $("#tambah-name").val('');
     $("#tambah-username").prop("disabled", true).val('');
 }
@@ -49,7 +49,7 @@ function init(){
 $("#add").click(function(){
     $("#tambah-modal").modal("show");
 
-    init();
+    tambah_init();
 
     $('#tambah-modal').on('shown.bs.modal', function() {
         $("#tambah-name").focus();

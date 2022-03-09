@@ -34,7 +34,7 @@ $(document).on('click', '.reset', function(e){
 
     $("#reset-modal").modal("show");
     $(".title").text("Reset Password : " + $(this).attr("nama"));
-})
+});
 
 $('#reset-form').on('submit', function(e){
     e.preventDefault();
