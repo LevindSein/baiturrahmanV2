@@ -7,7 +7,7 @@
             <!--begin::Page Heading-->
             <div class="d-flex align-items-baseline flex-wrap mr-5">
                 <!--begin::Page Title-->
-                <h1 class="text-dark font-weight-bold my-1 mr-5">@include('Users.Partial._title')</h1>
+                <h1 class="text-dark font-weight-bold my-1 mr-5">@include('Dashboard.Muzakki.Partial._title')</h1>
                 <!--end::Page Title-->
             </div>
             <!--end::Page Heading-->
@@ -16,7 +16,7 @@
         <!--begin::Toolbar-->
         <div class="d-flex align-items-center">
             <!--begin::Actions-->
-            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i> Pengguna</a>
+            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i>@include('Dashboard.Muzakki.Partial._title')</a>
             <!--end::Actions-->
         </div>
         <!--end::Toolbar-->

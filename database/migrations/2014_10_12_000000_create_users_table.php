@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->tinyInteger('level');
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

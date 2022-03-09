@@ -17,8 +17,11 @@ class AuthController extends Controller
     {
         if(Auth::check()){
             $user = Auth::user();
-            if($user){
-                return redirect('production/dashboard')->with('success',"Selamat Datang $user->name.");
+            if($user->level == 1){
+                return redirect('production/dashboard/rumusan')->with('success',"Selamat Datang $user->name.");
+            }
+            else if($user->level == 2){
+                return redirect('production/dashboard/muzakki')->with('success',"Selamat Datang $user->name.");
             }
             else{
                 return redirect('login')->with('warning', 'Harap Login.');
@@ -56,7 +59,7 @@ class AuthController extends Controller
             $credentials['password'] = sha1(md5($request->password));
             if(Auth::attempt($credentials)) {
                 $user = Auth::user();
-                if ($user->level == 1 || $user->level == 2){
+                if (($user->level == 1 || $user->level == 2) && $user->status == 1){
                     return response()->json(['success' => "Akses Sukses."]);
                 }
                 else{

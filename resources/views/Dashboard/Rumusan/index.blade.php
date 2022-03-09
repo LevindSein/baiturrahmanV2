@@ -1,11 +1,11 @@
 @extends('Layout.index')
 
 @section('content-title')
-@include('Dashboard.Partial._title')
+@include('Dashboard.Rumusan.Partial._title')
 @endsection
 
 @section('content-body')
-@include('Dashboard.Partial._subheader')
+@include('Dashboard.Rumusan.Partial._subheader')
 
 <div class="d-flex flex-column-fluid">
     <div class="container">
@@ -14,7 +14,7 @@
                 <!--begin::Card-->
                 <div class="card card-custom">
                     <div class="card-body">
-                        @include('Dashboard.Partial._alert', ['text' => 'Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras (Bahan Pokok)</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.'])
+                        @include('Dashboard.Rumusan.Partial._alert', ['text' => 'Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras (Bahan Pokok)</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.'])
 
                         <form id="rumus-form">
                             <div class="row">
@@ -72,7 +72,7 @@
 @endsection
 
 @section('content-modal')
-@include('Dashboard.Partial._modal')
+@include('Dashboard.Rumusan.Partial._modal')
 @endsection
 
 @section('content-js')
@@ -87,7 +87,7 @@ $('#rumus-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/dashboard/all",
+        url: "/production/dashboard/rumusan/all",
         cache: false,
         method: "PUT",
         data: $(this).serialize(),

@@ -57,10 +57,10 @@
         <script src="{{ asset($script) }}" type="text/javascript"></script>
     @endforeach
 
-    {{-- <script>
-        $(window).on('load', function() {
-            $(".se-pre-con").fadeIn("slow").fadeOut("slow");
-        });
+    <script>
+        // $(window).on('load', function() {
+        //     $(".se-pre-con").fadeIn("slow").fadeOut("slow");
+        // });
 
         $(document).ready(function() {
             $.fn.dataTable.ext.errMode = 'none';
@@ -76,7 +76,7 @@
                 }, 500);
             });
         });
-    </script> --}}
+    </script>
 
     @yield('content-modal')
 

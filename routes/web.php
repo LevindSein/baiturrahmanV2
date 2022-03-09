@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RumusanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MuzakkiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +30,20 @@ Route::resource('login', AuthController::class);
 //Login Authenticated
 Route::middleware('checkauth')->group(function(){
     Route::prefix('production')->group(function(){
-        Route::resource('dashboard', DashboardController::class);
+        //begin::LevelTwo
+        Route::middleware('leveltwo')->group(function(){
+            //begin::LevelOne
+            Route::middleware('levelone')->group(function(){
+                Route::resource('dashboard/rumusan', RumusanController::class);
+
+                Route::resource('users/aktif', UserController::class);
+            });
+            //end::LevelOne
+
+            Route::resource('dashboard/muzakki', MuzakkiController::class);
+        });
+        //end::LevelTwo
 
         Route::resource('profile', ProfileController::class);
-
-        Route::resource('users', UserController::class);
     });
 });

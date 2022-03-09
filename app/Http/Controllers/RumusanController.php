@@ -11,17 +11,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Rumusan;
 
-class DashboardController extends Controller
+class RumusanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $data = Rumusan::orderBy('kategori', 'asc')->get();
-        return view('Dashboard.index', [
+        return view('Dashboard.Rumusan.index', [
             'data'  => $data
         ]);
     }

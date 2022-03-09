@@ -41,7 +41,7 @@ $(".edit-rumus").click(function(e){
     id = $(this).attr("rumus-id");
 
     $.ajax({
-        url: "/production/dashboard/" + id  + "/edit",
+        url: "/production/dashboard/rumusan/" + id  + "/edit",
         cache: false,
         method: "GET",
         dataType: "json",
@@ -116,7 +116,7 @@ $('#edit-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/dashboard/" + id,
+        url: "/production/dashboard/rumusan/" + id,
         cache: false,
         method: "PUT",
         data: $(this).serialize(),

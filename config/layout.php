@@ -78,6 +78,7 @@ return [
             'vendor/fontawesome/css/all.min.css',
             'vendor/fontawesomepro/css/all.min.css',
             'vendor/toastr/toastr.min.css',
+            'vendor/datatables/datatables.bundle.css'
         ],
         'js' => [
             'js/jQuery.min.js',
@@ -88,6 +89,7 @@ return [
             'vendor/select2/dist/js/select2.min.js',
             'vendor/intTelInput/build/js/intlTelInput.js',
             'js/custom.js',
+            'vendor/datatables/datatables.bundle.js'
         ],
     ],
 

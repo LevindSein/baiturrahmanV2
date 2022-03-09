@@ -1,30 +1,22 @@
 <!--begin::Modal-->
-<div class="modal fade" id="tambah-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="tambah-modal" aria-hidden="true">
+<div class="modal fade" id="hapus-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="hapus-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Kategori</h5>
+                <h5 class="modal-title">Konfirmasi</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <form id="tambah-form">
+            <form id="hapus-form">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Nama Satuan <span class="text-danger">*</span></label>
-                        <input required type="text" id="tambah-satuan" name="tambah_satuan" autocomplete="off" maxlength="100" class="form-control" placeholder="Liter / Kilogram / Lainnya . ." />
-                    </div>
-                    <div class="form-group">
-                        <label>Nama Alternatif <span class="text-danger">*</span></label>
-                        <input required type="text" id="tambah-alternatif" name="tambah_alternatif" autocomplete="off" maxlength="100" class="form-control" placeholder="Ltr / Kg / Lainnya . ." />
-                    </div>
-                    <div class="form-group">
-                        <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
-                    </div>
+                    <p>
+                        Tekan tombol <span class="text-danger">Hapus</span>, jika anda yakin untuk menghapus data.
+                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary font-weight-bold">Simpan</button>
+                    <button class="btn btn-light-danger font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger font-weight-bold">Hapus</button>
                 </div>
             </form>
         </div>
@@ -34,22 +26,16 @@
 
 <!--begin::Javascript-->
 <script>
-$("#add").click(function(){
-    $("#tambah-modal").modal("show");
+var id;
 
-    $('#tambah-modal').on('shown.bs.modal', function() {
-        $("#tambah-satuan").focus();
-    });
+$(".hapus-rumus").click(function(e){
+    e.preventDefault();
+    id = $(this).attr("rumus-id");
+
+    $("#hapus-modal").modal("show");
 })
 
-$("#tambah-form").keypress(function(e) {
-    if(e.which == 13) {
-        $('#tambah-form').submit();
-        return false;
-    }
-});
-
-$('#tambah-form').on('submit', function(e){
+$('#hapus-form').on('submit', function(e){
     e.preventDefault();
 
     $.ajaxSetup({
@@ -59,9 +45,9 @@ $('#tambah-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/dashboard/",
+        url: "/production/dashboard/rumusan/" + id,
         cache: false,
-        method: "POST",
+        method: "DELETE",
         data: $(this).serialize(),
         dataType: "json",
         beforeSend:function(){
@@ -103,19 +89,12 @@ $('#tambah-form').on('submit', function(e){
             }
         },
         error:function(data){
-            if (data.status == 422) {
-                $.each(data.responseJSON.errors, function (i, error) {
-                    toastr.error(error[0]);
-                });
-            }
-            else{
-                toastr.error("System error.");
-                console.log(data);
-            }
+            toastr.error("System error.");
+            console.log(data);
         },
         complete:function(data){
             if(JSON.parse(data.responseText).success){
-                $('#tambah-modal').modal('hide');
+                $('#hapus-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
                 }, 1000);

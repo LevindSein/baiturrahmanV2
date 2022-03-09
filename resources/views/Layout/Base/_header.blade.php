@@ -34,9 +34,11 @@
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
+                    @if(Auth::user()->level == 1)
                     <li class="nav-item">
                         <a href="javascript:void(0)" class="nav-link py-4 px-6 {{ (request()->is('production/users*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
                     </li>
+                    @endif
                     <!--end::Item-->
                 </ul>
                 <!--begin::Tab Navs-->
@@ -106,13 +108,15 @@
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item {{ (request()->is('production/dashboard')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
-                                    <a href="{{url('production/dashboard')}}" class="menu-link">
+                                @if(Auth::user()->level == 1)
+                                <li class="menu-item {{ (request()->is('production/dashboard/rumusan*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/dashboard/rumusan')}}" class="menu-link">
                                         <span class="menu-text">Rumusan</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                @endif
+                                <li class="menu-item menu-item {{ (request()->is('production/dashboard/muzakki*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/dashboard/muzakki')}}" class="menu-link">
                                         <span class="menu-text">Muzakki</span>
                                     </a>
                                 </li>
@@ -214,13 +218,14 @@
                     </div>
                     <!--end::Tab Pane-->
                     <!--begin::Tab Pane-->
+                    @if(Auth::user()->level == 1)
                     <div class="tab-pane p-5 p-lg-0 justify-content-between {{ (request()->is('production/users*')) ? 'show active' : '' }}" id="kt_header_tab_5">
                         <!--begin::Menu-->
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item {{ (request()->is('production/users')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
-                                    <a href="{{url('production/users')}}" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/users/aktif')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/users/aktif')}}" class="menu-link">
                                         <span class="menu-text">Aktif</span>
                                     </a>
                                 </li>
@@ -234,6 +239,7 @@
                         </div>
                         <!--end::Menu-->
                     </div>
+                    @endif
                     <!--end::Tab Pane-->
                 </div>
                 <!--end::Tab Content-->
