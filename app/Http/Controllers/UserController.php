@@ -32,7 +32,7 @@ class UserController extends Controller
                     $button = '';
                     if(Auth::user()->id != $data->id){
                         $button  = '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-key"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-power-off"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-power-off"></i></a>';
                     }
                     return $button;
                 })
@@ -142,6 +142,23 @@ class UserController extends Controller
             $data->save();
 
             return response()->json(['success' => 'Password di reset <b>123456</b>.']);
+        }
+    }
+
+    public function nonaktif($id)
+    {
+        if(request()->ajax()){
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->status = 0;
+
+            $data->save();
+
+            return response()->json(['success' => 'Data berhasil dinonaktifkan.']);
         }
     }
 }

@@ -36,6 +36,7 @@ Route::middleware('checkauth')->group(function(){
             Route::middleware('levelone')->group(function(){
                 Route::resource('dashboard/rumusan', RumusanController::class);
 
+                Route::post('users/aktif/nonaktif/{id}', [UserController::class, 'nonaktif']);
                 Route::post('users/aktif/reset/{id}', [UserController::class, 'reset']);
                 Route::resource('users/aktif', UserController::class);
             });
