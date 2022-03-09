@@ -43,65 +43,64 @@
 
 @section('content-js')
 <script>
-    $(document).ready(function() {
-        var dtable = $('#dtable').DataTable({
-            language : {
-                paginate: {
-                    previous: "<i class='fas fa-angle-left'>",
-                    next: "<i class='fas fa-angle-right'>"
-                }
-            },
-            serverSide : true,
-            ajax : "/production/users/aktif",
-            columns : [
-                { data: 'name', name: 'name', class : 'text-center align-middle' },
-                { data: 'username', name: 'username', class : 'text-center align-middle' },
-                { data: 'level', name: 'level', class : 'text-center align-middle' },
-                { data: 'action', name: 'action', class : 'text-center align-middle' },
-            ],
-            stateSave : true,
-            deferRender : true,
-            pageLength : 10,
-            aLengthMenu : [[5,10,25,50,100], [5,10,25,50,100]],
-            order : [[ 0, "asc" ]],
-            aoColumnDefs: [
-                { "bSortable": false, "aTargets": [2, 3] },
-                { "bSearchable": false, "aTargets": [2, 3] }
-            ],
-            scrollY : "50vh",
-            scrollX : true,
-            preDrawCallback : function( settings ) {
-                scrollPosition = $(".dataTables_scrollBody").scrollTop();
-            },
-            drawCallback : function( settings ) {
-                $(".dataTables_scrollBody").scrollTop(scrollPosition);
-                if(typeof rowIndex != 'undefined') {
-                    dtable.row(rowIndex).nodes().to$().addClass('row_selected');
-                }
-                setTimeout( function () {
-                    $("[data-toggle='tooltip']").tooltip();
-                }, 10)
-            },
-        });
-
-        setInterval(function(){
-            dtableReload('');
-        }, 60000);
-
-        function dtableReload(searchKey){
-            // if(searchKey){
-            //     dtable.search(searchKey).draw();
-            // }
-
-            dtable.ajax.reload(function(){
-                console.log("Refresh Automatic")
-            }, false);
-
-            // $(".tooltip").tooltip("hide");
-
-            // $(".popover").popover("hide");
+var dtable = $('#dtable').DataTable({
+    language : {
+        paginate: {
+            previous: "<i class='fas fa-angle-left'>",
+            next: "<i class='fas fa-angle-right'>"
         }
-    });
+    },
+    serverSide : true,
+    ajax : "/production/users/aktif",
+    columns : [
+        { data: 'name', name: 'name', class : 'text-center align-middle' },
+        { data: 'username', name: 'username', class : 'text-center align-middle' },
+        { data: 'level', name: 'level', class : 'text-center align-middle' },
+        { data: 'action', name: 'action', class : 'text-center align-middle' },
+    ],
+    stateSave : true,
+    deferRender : true,
+    pageLength : 5,
+    aLengthMenu : [[5,10,25,50,100], [5,10,25,50,100]],
+    order : [[ 0, "asc" ]],
+    aoColumnDefs: [
+        { "bSortable": false, "aTargets": [2, 3] },
+        { "bSearchable": false, "aTargets": [2, 3] }
+    ],
+    scrollY : "50vh",
+    scrollX : true,
+    preDrawCallback : function( settings ) {
+        scrollPosition = $(".dataTables_scrollBody").scrollTop();
+    },
+    drawCallback : function( settings ) {
+        $(".dataTables_scrollBody").scrollTop(scrollPosition);
+        if(typeof rowIndex != 'undefined') {
+            dtable.row(rowIndex).nodes().to$().addClass('row_selected');
+        }
+        setTimeout( function () {
+            $("[data-toggle='tooltip']").tooltip();
+        }, 10)
+    },
+});
 
+
+
+setInterval(function(){
+    dtableReload();
+}, 60000);
+
+function dtableReload(searchKey = null){
+    // if(searchKey){
+    //     dtable.search(searchKey).draw();
+    // }
+
+    dtable.ajax.reload(function(){
+        console.log("Refresh Automatic")
+    }, false);
+
+    // $(".tooltip").tooltip("hide");
+
+    // $(".popover").popover("hide");
+}
 </script>
 @endsection

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\User;
 
@@ -28,8 +31,8 @@ class UserController extends Controller
                 ->addColumn('action', function($data){
                     $button = '';
                     if(Auth::user()->id != $data->id){
-                        $button  = '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-key"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Hapus" id="'.$data->id.'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-trash"></i></a>';
+                        $button  = '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-key"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-sm fa-power-off"></i></a>';
                     }
                     return $button;
                 })
@@ -123,5 +126,22 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reset($id)
+    {
+        if(request()->ajax()){
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->password = Hash::make(sha1(md5(123456)));
+
+            $data->save();
+
+            return response()->json(['success' => 'Password di reset <b>123456</b>.']);
+        }
     }
 }
