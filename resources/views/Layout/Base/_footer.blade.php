@@ -10,8 +10,9 @@
         <!--end::Copyright-->
         <!--begin::Nav-->
         <div class="nav nav-dark order-1 order-md-2">
+            <a href="https://api.whatsapp.com/send?phone=6285659927454" target="_blank" class="nav-link pr-3">DKM Baiturrahman</a>
             <a href="https://api.whatsapp.com/send?phone=62895337845511" target="_blank" class="nav-link pr-3 pl-0">Developer</a>
-            <a href="https://api.whatsapp.com/send?phone=6285659927454" target="_blank" class="nav-link px-3">DKM Baiturrahman</a>
+            <a href="https://github.com/LevindSein/baiturrahmanV2" target="_blank" class="nav-link pl-0">Github</a>
         </div>
         <!--end::Nav-->
     </div>
