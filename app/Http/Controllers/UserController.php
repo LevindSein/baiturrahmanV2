@@ -80,7 +80,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->ajax()){
+            $request->validate([
+                'tambah_username' => 'required|max:100|unique:App\Models\User,username',
+                'tambah_name' => 'required|max:100',
+            ]);
+
+            User::insert([
+                'username' => strtolower($request->tambah_username),
+                'name'     => $request->tambah_name,
+                'password' => Hash::make(sha1(md5(123456))),
+                'level'    => $request->tambah_level,
+                'status'   => 1
+            ]);
+
+            return response()->json(['success' => 'Data berhasil ditambah.']);
+        }
     }
 
     /**
