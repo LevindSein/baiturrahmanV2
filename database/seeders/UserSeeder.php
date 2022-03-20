@@ -7,8 +7,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-use Carbon\Carbon;
-
 class UserSeeder extends Seeder
 {
     /**
@@ -22,42 +20,21 @@ class UserSeeder extends Seeder
             [
                 'username' => 'super',
                 'name'     => 'Super Admin',
+                'hp'       => '0895337845511',
                 'password' => Hash::make(sha1(md5(123456))),
+                'address'  => 'Perum Villa Permata Cikampek Blok EG 2 / 27',
                 'level'    => 1,
                 'status'   => 1,
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'username' => 'admin',
                 'name'     => 'Admin',
+                'hp'       => '087838840774',
                 'password' => Hash::make(sha1(md5(123456))),
+                'address'  => 'Perum Villa Permata Cikampek Blok EG 2 / 27',
                 'level'    => 2,
                 'status'   => 1,
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]
         ]);
-
-        // DB::table('users')->insert([
-        //     'username' => 'super',
-        //     'name'     => 'Super Admin',
-        //     'password' => Hash::make(sha1(md5('123456'))),
-        //     'level'    => 1,
-        //     'status'   => 1,
-        //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        //     'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        // ]);
-        // for($i=0; $i<20; $i++){
-        //     DB::table('users')->insert([
-        //         'username' => 'admin'.$i,
-        //         'name'     => 'Admin',
-        //         'password' => Hash::make(sha1(md5('123456'))),
-        //         'level'    => 2,
-        //         'status'   => 1,
-        //         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        //         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        //     ]);
-        // }
     }
 }

@@ -1,6 +1,6 @@
 <!--begin::Modal-->
 <div class="modal fade" id="tambah-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="tambah-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Tambah @include('Users.Partial._title')</h5>
@@ -9,7 +9,7 @@
                 </button>
             </div>
             <form id="tambah-form">
-                <div class="modal-body">
+                <div class="modal-body" style="height: 45vh;">
                     <div class="form-group">
                         <label>Nama Pengguna <span class="text-danger">*</span></label>
                         <input required type="text" id="tambah-name" name="tambah_name" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
@@ -19,11 +19,19 @@
                         <input required type="text" id="tambah-username" name="tambah_username" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
                     </div>
                     <div class="form-group">
+                        <label>Nomor HP <span class="text-danger">*</span></label>
+                        <input required type="tel" id="tambah-hp" name="tambah_hp" autocomplete="off" minlength="11" maxlength="15" placeholder="0852123xxxxx" class="phone form-control" />
+                    </div>
+                    <div class="form-group">
                         <label>Level Pengguna <span class="text-danger">*</span></label>
                         <select required class="form-control" id="tambah-level" name="tambah_level">
                             <option value="2">Admin</option>
                             <option value="1">Super Admin</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat <span class="text-danger">*</span></label>
+                        <textarea required rows="5" id="tambah-address" name="tambah_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
                         <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
@@ -46,6 +54,8 @@ var status = JSON.parse("{{ $status }}");
 function tambah_init(){
     $("#tambah-name").val('');
     $("#tambah-username").prop("disabled", true).val('');
+    $("#tambah-hp").val('');
+    $("#tambah-address").val('');
 }
 
 $("#add").click(function(){
@@ -70,6 +80,15 @@ $("#tambah-name").on('input change', function() {
         var str = $("#tambah-name").val().replace(/\s/g, '').toLowerCase().substring(0,10);
         $("#tambah-username").val(str);
     }
+});
+
+$('.phone').on('input change', function(e) {
+    $(e.target).val($(e.target).val().replace(/[^\d\.]/g, ''))
+});
+
+$('.phone').on('keypress', function(e) {
+    keys = ['0','1','2','3','4','5','6','7','8','9']
+    return keys.indexOf(e.key) > -1
 });
 
 $("#tambah-form").keypress(function(e) {

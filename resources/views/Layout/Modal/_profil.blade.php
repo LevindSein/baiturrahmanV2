@@ -19,6 +19,14 @@
                         <input required type="text" id="profil-name" name="profil_name" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Anda" />
                     </div>
                     <div class="form-group">
+                        <label>Nomor HP <span class="text-danger">*</span></label>
+                        <input required type="tel" id="profil-hp" name="profil_hp" autocomplete="off" minlength="11" maxlength="15" placeholder="0852123xxxxx" class="phone form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat <span class="text-danger">*</span></label>
+                        <textarea required rows="5" id="profil-address" name="profil_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
                         <label>Password Sekarang <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <input required type="password" id="profil-password-now" name="profil_password_now" minlength="6" class="form-control" placeholder="Masukkan Password untuk Konfirmasi Perubahan" />
@@ -62,6 +70,8 @@
                 if(data.success){
                     $("#profil-username").val(data.success.username);
                     $("#profil-name").val(data.success.name);
+                    $("#profil-hp").val(data.success.hp);
+                    $("#profil-address").val(data.success.address);
                 }
 
                 if(data.error){
@@ -100,6 +110,15 @@
     $("#profil-name").on('input', function() {
         this.value = this.value.replace(/[^0-9a-zA-Z/\s.,]+$/g, '');
         this.value = this.value.replace(/\s\s+/g, ' ');
+    });
+
+    $('.phone').on('input change', function(e) {
+        $(e.target).val($(e.target).val().replace(/[^\d\.]/g, ''))
+    });
+
+    $('.phone').on('keypress', function(e) {
+        keys = ['0','1','2','3','4','5','6','7','8','9']
+        return keys.indexOf(e.key) > -1
     });
 
     $('#profil-password-new-show').on('click touchstart', function(e){

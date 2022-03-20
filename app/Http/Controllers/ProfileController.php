@@ -97,8 +97,10 @@ class ProfileController extends Controller
             }
 
             $request->validate([
-                'profil_username' => 'required|max:100|alpha_num|unique:App\Models\User,username,'.$decrypted,
-                'profil_name' => 'required|max:100',
+                'profil_username'     => 'required|max:100|alpha_num|unique:App\Models\User,username,'.$decrypted,
+                'profil_name'         => 'required|string|max:100',
+                'profil_hp'           => 'required|numeric|digits_between:11,15',
+                'profil_address'      => 'required|string|max:255',
                 'profil_password_now' => 'required|min:6',
                 'profil_password_new' => 'nullable|min:6',
             ]);
@@ -111,6 +113,8 @@ class ProfileController extends Controller
 
             $data->username = $request->profil_username;
             $data->name = $request->profil_name;
+            $data->hp = $request->profil_hp;
+            $data->address = $request->profil_address;
 
             if($request->profil_password_new){
                 $data->password = Hash::make(sha1(md5($request->profil_password_new)));

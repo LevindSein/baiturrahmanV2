@@ -73,7 +73,6 @@ return [
         'css' => [
             'metronic/assets/plugins/global/plugins.bundle.css',
             'metronic/assets/css/style.bundle.css',
-            'vendor/select2/dist/css/select2.min.css',
             'vendor/intTelInput/build/css/intlTelInput.css',
             'vendor/fontawesome/css/all.min.css',
             'vendor/fontawesomepro/css/all.min.css',
@@ -86,7 +85,6 @@ return [
             'metronic/assets/js/scripts.bundle.js',
             'vendor/toastr/toastr.min.js',
             'vendor/block-ui/jquery.blockUI.js',
-            'vendor/select2/dist/js/select2.min.js',
             'vendor/intTelInput/build/js/intlTelInput.js',
             'js/custom.js',
             'vendor/datatables/datatables.bundle.js'

@@ -17,7 +17,8 @@ class CreateRumusan extends Migration
             $table->id();
             $table->tinyInteger('kategori')->unique();
             $table->json('rumus');
-            $table->timestamps();
+            $table->datetime('updated_at')->useCurrent();
+            $table->datetime('created_at')->useCurrent();
         });
     }
 

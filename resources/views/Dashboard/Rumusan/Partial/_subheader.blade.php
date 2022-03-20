@@ -16,7 +16,7 @@
         <!--begin::Toolbar-->
         <div class="d-flex align-items-center">
             <!--begin::Actions-->
-            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i>@include('Dashboard.Rumusan.Partial._title')</a>
+            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm"><i class="fas fa-plus fa-sm"></i>@include('Dashboard.Rumusan.Partial._title')</a>
             <!--end::Actions-->
         </div>
         <!--end::Toolbar-->

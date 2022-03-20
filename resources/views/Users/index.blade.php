@@ -85,8 +85,6 @@ var dtable = $('#dtable').DataTable({
     },
 });
 
-
-
 setInterval(function(){
     dtableReload();
 }, 60000);

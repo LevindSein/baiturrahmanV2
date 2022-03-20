@@ -7,6 +7,7 @@ use App\Http\Controllers\RumusanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MuzakkiController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,6 @@ Route::middleware('checkauth')->group(function(){
 
         Route::resource('profile', ProfileController::class);
     });
+
+    Route::get('search/another-user', [SearchController::class, 'anotherUser']);
 });

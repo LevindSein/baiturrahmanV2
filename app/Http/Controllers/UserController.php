@@ -25,44 +25,46 @@ class UserController extends Controller
         if(request()->ajax()){
             $data = User::select('id','username','name','level')->where([
                 ['status', $status],
+                ['level', '<=', 2],
                 ['id', '!=', Auth::id()]
             ]);
             return DataTables::of($data)
-                ->addColumn('action', function($data) use ($status){
-                    $button = '';
-                    if(Auth::user()->id != $data->id){
-                        if($status == 1){
-                            $button  = '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
-                            $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
-                            $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
-                        } else {
-                            $button = '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
-                        }
+            ->addColumn('action', function($data) use ($status){
+                $button = '';
+                if(Auth::user()->id != $data->id){
+                    if($status == 1){
+                        $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
+                    } else {
+                        $button .= '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
                     }
-                    return $button;
-                })
-                ->editColumn('level', function($data){
-                    if($data->level == 1){
-                        $button = '<span class="label label-lg font-weight-bold label-inline label-light-primary">Super Admin</span>';
-                    }
-                    else{
-                        $button = '<span class="label label-lg font-weight-bold label-inline label-light-success">Admin</span>';
-                    }
-                    return $button;
-                })
-                ->editColumn('name', function($data){
-                    $name = $data->name;
-                    if(strlen($name) > 15) {
-                        $name = substr($name, 0, 11);
-                        $name = str_pad($name,  15, ".");
-                        return "<span data-toggle='tooltip' title='$data->name'>$name</span>";
-                    }
-                    else{
-                        return $name;
-                    }
-                })
-                ->rawColumns(['action','level', 'name'])
-                ->make(true);
+                    $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
+                }
+                return $button;
+            })
+            ->editColumn('level', function($data){
+                if($data->level == 1){
+                    $button = '<span class="label label-lg font-weight-bold label-inline label-light-primary">Super Admin</span>';
+                }
+                else{
+                    $button = '<span class="label label-lg font-weight-bold label-inline label-light-success">Admin</span>';
+                }
+                return $button;
+            })
+            ->editColumn('name', function($data){
+                $name = $data->name;
+                if(strlen($name) > 15) {
+                    $name = substr($name, 0, 11);
+                    $name = str_pad($name,  15, ".");
+                    return "<span data-toggle='tooltip' title='$data->name'>$name</span>";
+                }
+                else{
+                    return $name;
+                }
+            })
+            ->rawColumns(['action','level', 'name'])
+            ->make(true);
         }
         if ($status <= 1)
             return view('Users.index', [
@@ -93,15 +95,19 @@ class UserController extends Controller
     {
         if($request->ajax() && $status == 1){
             $request->validate([
-                'tambah_username' => 'required|max:100|unique:App\Models\User,username',
-                'tambah_name' => 'required|max:100',
-                'tambah_level' => 'required|digits_between:1,2'
+                'tambah_username' => 'required|string|max:100|unique:App\Models\User,username',
+                'tambah_name'     => 'required|string|max:100',
+                'tambah_hp'       => 'required|numeric|digits_between:11,15',
+                'tambah_address'  => 'required|string|max:255',
+                'tambah_level'    => 'required|numeric|digits_between:1,2',
             ]);
 
             User::insert([
                 'username' => strtolower($request->tambah_username),
                 'name'     => $request->tambah_name,
+                'hp'       => $request->tambah_hp,
                 'password' => Hash::make(sha1(md5(123456))),
+                'address'  => $request->tambah_address,
                 'level'    => $request->tambah_level,
                 'status'   => $status
             ]);
@@ -118,7 +124,15 @@ class UserController extends Controller
      */
     public function show($status, $id)
     {
-        //
+        if(request()->ajax() && $status == 1){
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            return response()->json(['success' => $data]);
+        }
     }
 
     /**
@@ -151,8 +165,10 @@ class UserController extends Controller
     {
         if($request->ajax() && $status == 1){
             $request->validate([
-                'edit_name' => 'required|max:100',
-                'edit_level' => 'required|digits_between:1,2'
+                'edit_name'     => 'required|string|max:100',
+                'edit_hp'       => 'required|numeric|digits_between:11,15',
+                'edit_address'  => 'required|string|max:255',
+                'edit_level'    => 'required|numeric|digits_between:1,2'
             ]);
 
             try {
@@ -162,8 +178,10 @@ class UserController extends Controller
             }
 
             $data->update([
-                'name'     => $request->edit_name,
-                'level'    => $request->edit_level,
+                'name'    => $request->edit_name,
+                'hp'      => $request->edit_hp,
+                'address' => $request->edit_address,
+                'level'   => $request->edit_level
             ]);
 
             return response()->json(['success' => "Data berhasil disimpan."]);

@@ -1,6 +1,6 @@
 <!--begin::Modal-->
 <div class="modal fade" id="edit-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="edit-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Edit @include('Users.Partial._title')</h5>
@@ -9,10 +9,14 @@
                 </button>
             </div>
             <form id="edit-form">
-                <div class="modal-body">
+                <div class="modal-body" style="height: 45vh;">
                     <div class="form-group">
                         <label>Nama Pengguna <span class="text-danger">*</span></label>
                         <input required type="text" id="edit-name" name="edit_name" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor HP <span class="text-danger">*</span></label>
+                        <input required type="tel" id="edit-hp" name="edit_hp" autocomplete="off" minlength="11" maxlength="15" placeholder="0852123xxxxx" class="phone form-control" />
                     </div>
                     <div class="form-group">
                         <label>Level Pengguna <span class="text-danger">*</span></label>
@@ -20,6 +24,10 @@
                             <option value="2">Admin</option>
                             <option value="1">Super Admin</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat <span class="text-danger">*</span></label>
+                        <textarea required rows="5" id="edit-address" name="edit_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
                         <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
@@ -39,6 +47,8 @@
 <script>
 function edit_init(){
     $("#edit-name").val('');
+    $("#edit-hp").val('');
+    $("#edit-address").val('');
 }
 
 var id;
@@ -75,7 +85,9 @@ $(document).on('click', '.edit', function(e){
         {
             if(data.success){
                 $("#edit-name").val(data.success.name);
+                $("#edit-hp").val(data.success.hp);
                 $("#edit-level").val(data.success.level);
+                $("#edit-address").val(data.success.address);
             }
 
             if(data.info){
@@ -114,6 +126,20 @@ $(document).on('click', '.edit', function(e){
     $('#edit-modal').on('shown.bs.modal', function() {
         $("#edit-name").focus();
     });
+});
+
+$("#edit-name").on('input change', function() {
+    this.value = this.value.replace(/[^0-9a-zA-Z/\s.,]+$/g, '');
+    this.value = this.value.replace(/\s\s+/g, ' ');
+});
+
+$('.phone').on('input change', function(e) {
+    $(e.target).val($(e.target).val().replace(/[^\d\.]/g, ''))
+});
+
+$('.phone').on('keypress', function(e) {
+    keys = ['0','1','2','3','4','5','6','7','8','9']
+    return keys.indexOf(e.key) > -1
 });
 
 $("#edit-form").keypress(function(e) {

@@ -5,3 +5,5 @@
 @include('Users.Modal._reset', ['status' => $status])
 
 @include('Users.Modal._change', ['status' => $status])
+
+@include('Users.Modal._rincian', ['status' => $status])
