@@ -1,5 +1,5 @@
 <!--begin::Modal-->
-<div class="modal fade" id="change-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="change-modal" aria-hidden="true">
+<div class="modal fade" id="hapus-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="hapus-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <form id="change-form">
+            <form id="hapus-form">
                 <div class="modal-body">
                     <p>
                         Tekan tombol <span class="text-danger status"></span>, jika anda yakin untuk mengganti status pengguna.
@@ -30,22 +30,22 @@ var id;
 
 var status = JSON.parse("{{ $status }}");
 
-$(document).on('click', '.change', function(e){
+$(document).on('click', '.delete', function(e){
     e.preventDefault();
     id = $(this).attr("id");
 
     if(status == 1){
-        $("#change-modal").modal("show");
+        $("#hapus-modal").modal("show");
         $(".title").text("Nonaktifkan : " + $(this).attr("nama"));
         $(".status").text("Nonaktif");
     } else {
-        $("#change-modal").modal("show");
+        $("#hapus-modal").modal("show");
         $(".title").text("Aktifkan : " + $(this).attr("nama"));
         $(".status").text("Aktif");
     }
 })
 
-$('#change-form').on('submit', function(e){
+$('#hapus-form').on('submit', function(e){
     e.preventDefault();
 
     $.ajaxSetup({
@@ -55,9 +55,9 @@ $('#change-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/users/" + status + "/aktif/change/" + id,
+        url: "/production/users/" + status + "/aktif/" + id,
         cache: false,
-        method: "POST",
+        method: "DELETE",
         data: $(this).serialize(),
         dataType: "json",
         beforeSend:function(){
@@ -104,12 +104,12 @@ $('#change-form').on('submit', function(e){
         },
         complete:function(data){
             if(JSON.parse(data.responseText).success){
-                $('#change-modal').modal('hide');
+                $('#hapus-modal').modal('hide');
                 dtableReload();
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

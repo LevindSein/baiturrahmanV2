@@ -37,7 +37,6 @@ Route::middleware('checkauth')->group(function(){
             Route::middleware('levelone')->group(function(){
                 Route::resource('dashboard/rumusan', RumusanController::class);
 
-                Route::post('users/{status}/aktif/change/{id}', [UserController::class, 'change']);
                 Route::post('users/{status}/aktif/reset/{id}', [UserController::class, 'reset']);
                 Route::resource('users/{status}/aktif', UserController::class);
             });
@@ -50,5 +49,6 @@ Route::middleware('checkauth')->group(function(){
         Route::resource('profile', ProfileController::class);
     });
 
+    Route::get('search/another-user/{id}', [SearchController::class, 'anotherUserId']);
     Route::get('search/another-user', [SearchController::class, 'anotherUser']);
 });

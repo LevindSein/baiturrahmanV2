@@ -22,24 +22,17 @@
                         <label>Alamat <span class="text-danger">*</span></label>
                         <textarea required rows="5" id="tambah-address" name="tambah_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>Keanggotaan <span class="text-danger">*</span></label>
-                        <select required class="form-control" id="tambah-keanggotaan" name="tambah_keanggotaan">
-                            <option value="" disabled selected>Pilih Jenis Keanggotaan </option>
-                            <option value="0">Kepala Keluarga</option>
-                            <option value="1">Anggota Keluarga</option>
-                        </select>
-                    </div>
                     <div class="form-group" id="tambah-pilih">
-                        <label>Pilih Kepala Keluarga <span class="text-danger">*</span></label>
-                        <select required class="form-control" id="tambah-family" name="tambah_family" style="width:100%"></select>
+                        <label>Pilih Kepala Keluarga</label>
+                        <select class="form-control" id="tambah-family" name="tambah_family" style="width:100%"></select>
+                        <span class="form-text text-muted">Pilih Kepala Keluarga jika Muzakki ditanggung</span>
                     </div>
-                    <span class="form-text text-muted">Checklist apabila Muzakki termasuk Mustahik</span>
+                    <label>Checklist apabila Muzakki termasuk Mustahik</label>
                     <div class="form-group row">
                         <div class="col-3 col-form-label">
                             <div class="checkbox-inline d-flex pt-3">
                                 <label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">
-                                    <input required type="checkbox" name="tambah_mustahik" id="tambah-mustahik" />
+                                    <input type="checkbox" name="tambah_mustahik" id="tambah-mustahik" />
                                     <span></span>Mustahik
                                 </label>
                             </div>
@@ -74,29 +67,13 @@
 
 <!--begin::Javascript-->
 <script>
-$('#tambah-family').select2({
-    placeholder: "Cari Nama Kepala Keluarga",
-    allowClear: true,
-    ajax: {
-        url: "/search/another-user",
-        dataType: 'json',
-        delay: 250,
-        cache: true,
-        processResults: function (data) {
-            return {
-                results:  $.map(data, function (d) {
-                    return {
-                        id: d.id,
-                        text: d.name + ' (' + d.hp + ')'
-                    }
-                })
-            };
-        },
-    }
-});
-
 function tambah_init(){
     $("#tambah-name").val('');
+    $("#tambah-hp").val('');
+    $("#tambah-address").val('');
+    $("#tambah-family").val('').html('');
+    $("#tambah-mustahik").prop('checked', false);
+    $("#tambah-type").val('').prop('disabled', true).prop('required', false);
 }
 
 $("#add").click(function(){
@@ -122,6 +99,47 @@ $('.phone').on('keypress', function(e) {
     keys = ['0','1','2','3','4','5','6','7','8','9']
     return keys.indexOf(e.key) > -1
 });
+
+$('#tambah-family').select2({
+    placeholder: "Cari Nama Kepala Keluarga",
+    allowClear: true,
+    ajax: {
+        url: "/search/another-user",
+        dataType: 'json',
+        delay: 250,
+        cache: true,
+        processResults: function (data) {
+            return {
+                results:  $.map(data, function (d) {
+                    return {
+                        id: d.id,
+                        text: d.name + ' (' + d.hp + ')'
+                    }
+                })
+            };
+        },
+    }
+});
+
+function tambahMustahik(data){
+    if(data == 'show'){
+        $("#tambah-type").prop('disabled', false).prop('required', true);
+    }
+    else{
+        $("#tambah-type").val('').prop('disabled', true).prop('required', false);
+    }
+}
+
+function checkTambahMustahik(){
+    if($("#tambah-mustahik").is(":checked")){
+        tambahMustahik("show");
+    }
+    else{
+        tambahMustahik("hide");
+    }
+}
+
+$('#tambah-mustahik').click(checkTambahMustahik).each(checkTambahMustahik);
 
 $("#tambah-form").keypress(function(e) {
     if(e.which == 13) {
@@ -201,7 +219,7 @@ $('#tambah-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

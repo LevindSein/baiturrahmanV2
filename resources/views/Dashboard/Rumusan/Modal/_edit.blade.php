@@ -175,11 +175,11 @@ $('#edit-form').on('submit', function(e){
                 $('#edit-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
-                }, 1000);
+                }, 500);
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

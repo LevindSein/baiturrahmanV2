@@ -102,7 +102,7 @@ $('#reset-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

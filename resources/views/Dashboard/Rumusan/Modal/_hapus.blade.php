@@ -97,11 +97,11 @@ $('#hapus-form').on('submit', function(e){
                 $('#hapus-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
-                }, 1000);
+                }, 500);
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

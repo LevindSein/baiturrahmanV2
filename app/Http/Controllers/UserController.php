@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\User;
+use App\Models\AnotherUser as Mustahik;
 
 use DataTables;
 
@@ -35,9 +36,9 @@ class UserController extends Controller
                     if($status == 1){
                         $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
                         $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
                     } else {
-                        $button .= '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
                     }
                     $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
                 }
@@ -109,7 +110,16 @@ class UserController extends Controller
                 'password' => Hash::make(sha1(md5(123456))),
                 'address'  => $request->tambah_address,
                 'level'    => $request->tambah_level,
-                'status'   => $status
+                'status'   => 1
+            ]);
+
+            Mustahik::insert([
+                'name'          => $request->tambah_name,
+                'hp'            => $request->tambah_hp,
+                'address'       => $request->tambah_address,
+                'mustahik'      => 1,
+                'stt_mustahik'  => 1,
+                'type_mustahik' => 7,
             ]);
 
             return response()->json(['success' => 'Data berhasil ditambah.']);
@@ -196,28 +206,6 @@ class UserController extends Controller
      */
     public function destroy($status, $id)
     {
-        //
-    }
-
-    public function reset($status, $id)
-    {
-        if(request()->ajax() && $status == 1){
-            try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
-                return response()->json(['error' => "Data lost."]);
-            }
-
-            $data->password = Hash::make(sha1(md5(123456)));
-
-            $data->save();
-
-            return response()->json(['success' => 'Password di reset <b>123456</b>.']);
-        }
-    }
-
-    public function change($status, $id)
-    {
         if(request()->ajax()){
             try {
                 $data = User::findOrFail($id);
@@ -236,6 +224,23 @@ class UserController extends Controller
             $data->save();
 
             return response()->json(['success' => $message]);
+        }
+    }
+
+    public function reset($status, $id)
+    {
+        if(request()->ajax() && $status == 1){
+            try {
+                $data = User::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->password = Hash::make(sha1(md5(123456)));
+
+            $data->save();
+
+            return response()->json(['success' => 'Password di reset <b>123456</b>.']);
         }
     }
 }

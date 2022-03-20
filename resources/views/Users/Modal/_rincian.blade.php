@@ -13,6 +13,8 @@
                 <h6 id="showUsername"></h6>
                 <small class="text-muted pt-4 db">Nama</small>
                 <h6 id="showNama"></h6>
+                <small class="text-muted pt-4 db">Nomor HP</small>
+                <h6 id="showHp"></h6>
                 <small class="text-muted pt-4 db">Status</small>
                 <h6 id="showStatus"></h6>
                 <small class="text-muted pt-4 db">Level</small>
@@ -64,6 +66,7 @@ $(document).on('click', '.detail', function(e){
             if(data.success){
                 $("#showUsername").text(data.success.username);
                 $("#showNama").text(data.success.name);
+                $("#showHp").text(data.success.hp);
                 $("#showStatus").html((data.success.status == 1) ? "<span class='text-success'>Aktif</span>" : "<span class='text-danger'>Nonaktif</span>" );
                 $("#showLevel").text(data.success.level);
                 $("#showAlamat").text(data.success.address);
@@ -98,7 +101,7 @@ $(document).on('click', '.detail', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });

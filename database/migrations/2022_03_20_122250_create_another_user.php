@@ -20,9 +20,10 @@ class CreateAnotherUser extends Migration
             $table->text('address');
             $table->bigInteger('family')->nullable();
             $table->boolean('muzakki')->nullable();
+            $table->boolean('stt_muzakki')->nullable();
             $table->boolean('mustahik')->nullable();
-            $table->tinyInteger('type')->nullable();
-            $table->boolean('status');
+            $table->boolean('stt_mustahik')->nullable();
+            $table->tinyInteger('type_mustahik')->nullable();
             $table->datetime('updated_at')->useCurrent();
             $table->datetime('created_at')->useCurrent();
         });

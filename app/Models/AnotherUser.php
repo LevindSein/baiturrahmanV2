@@ -12,11 +12,13 @@ class AnotherUser extends Model
     protected $table = 'another_user';
     protected $fillable = [
         'name',
+        'hp',
         'address',
         'family',
         'muzakki',
         'mustahik',
         'type',
+        'status'
     ];
 
     public function __construct($type = 7)

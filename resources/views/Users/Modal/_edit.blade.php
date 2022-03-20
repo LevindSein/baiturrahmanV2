@@ -119,7 +119,7 @@ $(document).on('click', '.edit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 
@@ -220,7 +220,7 @@ $('#edit-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 1000);
+            }, 500);
         }
     });
 });
