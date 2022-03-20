@@ -63770,3 +63770,13 @@ body {
     padding: 15px 0; }
     .subheader-enabled.subheader-transparent .content {
       padding-top: 0; } }
+
+.se-pre-con {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+    background: url('../../../img/pulse.gif') center no-repeat #fff;
+}

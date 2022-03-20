@@ -1,22 +1,26 @@
 <!--begin::Modal-->
-<div class="modal fade" id="edit-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="edit-modal" aria-hidden="true">
+<div class="modal fade" id="tambah-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="tambah-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit @include('Users.Aktif.Partial._title')</h5>
+                <h5 class="modal-title">Tambah @include('Users.Partial._title')</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <form id="edit-form">
+            <form id="tambah-form">
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Nama Pengguna <span class="text-danger">*</span></label>
-                        <input required type="text" id="edit-name" name="edit_name" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
+                        <input required type="text" id="tambah-name" name="tambah_name" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
+                    </div>
+                    <div class="form-group">
+                        <label>Username (untuk Login) <span class="text-danger">*</span></label>
+                        <input required type="text" id="tambah-username" name="tambah_username" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
                     </div>
                     <div class="form-group">
                         <label>Level Pengguna <span class="text-danger">*</span></label>
-                        <select required class="form-control" id="edit-level" name="edit_level">
+                        <select required class="form-control" id="tambah-level" name="tambah_level">
                             <option value="2">Admin</option>
                             <option value="1">Super Admin</option>
                         </select>
@@ -37,91 +41,45 @@
 
 <!--begin::Javascript-->
 <script>
-function edit_init(){
-    $("#edit-name").val('');
+var status = JSON.parse("{{ $status }}");
+
+function tambah_init(){
+    $("#tambah-name").val('');
+    $("#tambah-username").prop("disabled", true).val('');
 }
 
-var id;
+$("#add").click(function(){
+    $("#tambah-modal").modal("show");
 
-$(document).on('click', '.edit', function(e){
-    e.preventDefault();
-    id = $(this).attr("id");
-    edit_init();
+    tambah_init();
 
-    $.ajax({
-        url: "/production/users/aktif/" + id + "/edit",
-        cache: false,
-        method: "GET",
-        dataType: "json",
-        beforeSend:function(){
-            $.blockUI({
-                message: '<i class="fad fa-spin fa-spinner text-white"></i>',
-                baseZ: 9999,
-                overlayCSS: {
-                    backgroundColor: '#000',
-                    opacity: 0.5,
-                    cursor: 'wait'
-                },
-                css: {
-                    border: 0,
-                    padding: 0,
-                    backgroundColor: 'transparent'
-                }
-            });
-        },
-        success:function(data)
-        {
-            if(data.success){
-                $("#edit-name").val(data.success.name);
-                $("#edit-level").val(data.success.level);
-            }
-
-            if(data.info){
-                toastr.info(data.info);
-            }
-
-            if(data.warning){
-                toastr.warning(data.warning);
-            }
-
-            if(data.error){
-                toastr.error(data.error);
-            }
-
-            if(data.debug){
-                console.log(data.debug);
-            }
-        },
-        error:function(data){
-            toastr.error("System error.");
-            console.log(data);
-        },
-        complete:function(data){
-            if(JSON.parse(data.responseText).success){
-                $("#edit-modal").modal("show");
-            }
-            else{
-                toastr.error("Gagal mengambil data.");
-            }
-            setTimeout(() => {
-                $.unblockUI();
-            }, 1000);
-        }
-    });
-
-    $('#edit-modal').on('shown.bs.modal', function() {
-        $("#edit-name").focus();
+    $('#tambah-modal').on('shown.bs.modal', function() {
+        $("#tambah-name").focus();
     });
 });
 
-$("#edit-form").keypress(function(e) {
+$("#tambah-name").on('input change', function() {
+    this.value = this.value.replace(/[^0-9a-zA-Z/\s.,]+$/g, '');
+    this.value = this.value.replace(/\s\s+/g, ' ');
+
+    if($("#tambah-name").val() == ''){
+        $("#tambah-username").prop("disabled", true).val('');
+    }
+    else{
+        $("#tambah-username").prop("disabled", false);
+        var str = $("#tambah-name").val().replace(/\s/g, '').toLowerCase().substring(0,10);
+        $("#tambah-username").val(str);
+    }
+});
+
+$("#tambah-form").keypress(function(e) {
     if(e.which == 13) {
-        $('#edit-form').submit();
+        $('#tambah-form').submit();
         return false;
     }
 });
 
-$('#edit-form').on('submit', function(e){
+$('#tambah-form').on('submit', function(e){
     e.preventDefault();
 
     $.ajaxSetup({
@@ -131,9 +89,9 @@ $('#edit-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/users/aktif/" + id,
+        url: "/production/users/" + status + "/aktif",
         cache: false,
-        method: "PUT",
+        method: "POST",
         data: $(this).serialize(),
         dataType: "json",
         beforeSend:function(){
@@ -187,7 +145,7 @@ $('#edit-form').on('submit', function(e){
         },
         complete:function(data){
             if(JSON.parse(data.responseText).success){
-                $('#edit-modal').modal('hide');
+                $('#tambah-modal').modal('hide');
                 dtableReload();
             }
             setTimeout(() => {

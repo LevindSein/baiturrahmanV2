@@ -1,5 +1,5 @@
 <!--begin::Modal-->
-<div class="modal fade" id="nonaktif-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="nonaktif-modal" aria-hidden="true">
+<div class="modal fade" id="change-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="change-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,15 +8,15 @@
                     <i aria-hidden="true" class="ki ki-close"></i>
                 </button>
             </div>
-            <form id="nonaktif-form">
+            <form id="change-form">
                 <div class="modal-body">
                     <p>
-                        Tekan tombol <span class="text-danger">Nonaktif</span>, jika anda yakin untuk menonaktifkan pengguna.
+                        Tekan tombol <span class="text-danger status"></span>, jika anda yakin untuk mengganti status pengguna.
                     </p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-light-danger font-weight-bold" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger font-weight-bold">Nonaktif</button>
+                    <button type="submit" class="btn btn-danger font-weight-bold status"></button>
                 </div>
             </form>
         </div>
@@ -28,15 +28,24 @@
 <script>
 var id;
 
-$(document).on('click', '.nonaktif', function(e){
+var status = JSON.parse("{{ $status }}");
+
+$(document).on('click', '.change', function(e){
     e.preventDefault();
     id = $(this).attr("id");
 
-    $("#nonaktif-modal").modal("show");
-    $(".title").text("Nonaktif : " + $(this).attr("nama"));
+    if(status == 1){
+        $("#change-modal").modal("show");
+        $(".title").text("Nonaktifkan : " + $(this).attr("nama"));
+        $(".status").text("Nonaktif");
+    } else {
+        $("#change-modal").modal("show");
+        $(".title").text("Aktifkan : " + $(this).attr("nama"));
+        $(".status").text("Aktif");
+    }
 })
 
-$('#nonaktif-form').on('submit', function(e){
+$('#change-form').on('submit', function(e){
     e.preventDefault();
 
     $.ajaxSetup({
@@ -46,7 +55,7 @@ $('#nonaktif-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/users/aktif/nonaktif/" + id,
+        url: "/production/users/" + status + "/aktif/change/" + id,
         cache: false,
         method: "POST",
         data: $(this).serialize(),
@@ -95,7 +104,7 @@ $('#nonaktif-form').on('submit', function(e){
         },
         complete:function(data){
             if(JSON.parse(data.responseText).success){
-                $('#nonaktif-modal').modal('hide');
+                $('#change-modal').modal('hide');
                 dtableReload();
             }
             setTimeout(() => {

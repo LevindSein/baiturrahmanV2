@@ -28,6 +28,8 @@
 <script>
 var id;
 
+var status = JSON.parse("{{ $status }}");
+
 $(document).on('click', '.reset', function(e){
     e.preventDefault();
     id = $(this).attr("id");
@@ -46,7 +48,7 @@ $('#reset-form').on('submit', function(e){
     });
 
     $.ajax({
-        url: "/production/users/aktif/reset/" + id,
+        url: "/production/users/" + status + "/aktif/reset/" + id,
         cache: false,
         method: "POST",
         data: $(this).serialize(),

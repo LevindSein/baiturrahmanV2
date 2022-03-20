@@ -224,13 +224,13 @@
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item {{ (request()->is('production/users/aktif')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
-                                    <a href="{{url('production/users/aktif')}}" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/users/1/aktif')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/users/1/aktif')}}" class="menu-link">
                                         <span class="menu-text">Aktif</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/users/0/aktif')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/users/0/aktif')}}" class="menu-link">
                                         <span class="menu-text">Nonaktif</span>
                                     </a>
                                 </li>

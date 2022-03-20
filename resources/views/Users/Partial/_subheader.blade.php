@@ -7,7 +7,7 @@
             <!--begin::Page Heading-->
             <div class="d-flex align-items-baseline flex-wrap mr-5">
                 <!--begin::Page Title-->
-                <h1 class="text-dark font-weight-bold my-1 mr-5">@include('Users.Aktif.Partial._title')</h1>
+                <h1 class="text-dark font-weight-bold my-1 mr-5">@include('Users.Partial._title')</h1>
                 <!--end::Page Title-->
             </div>
             <!--end::Page Heading-->
@@ -15,9 +15,11 @@
         <!--end::Info-->
         <!--begin::Toolbar-->
         <div class="d-flex align-items-center">
+            @if($status == 1)
             <!--begin::Actions-->
-            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i>@include('Users.Aktif.Partial._title')</a>
+            <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm mr-2"><i class="fas fa-plus fa-sm"></i>@include('Users.Partial._title')</a>
             <!--end::Actions-->
+            @endif
         </div>
         <!--end::Toolbar-->
     </div>

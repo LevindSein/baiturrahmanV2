@@ -1,11 +1,11 @@
 @extends('Layout.index')
 
 @section('content-title')
-@include('Users.Aktif.Partial._title')
+@include('Users.Partial._title', ['title' => $title])
 @endsection
 
 @section('content-body')
-@include('Users.Aktif.Partial._subheader')
+@include('Users.Partial._subheader', ['status' => $status])
 
 <div class="d-flex flex-column-fluid">
     <div class="container">
@@ -14,7 +14,7 @@
                 <!--begin::Card-->
                 <div class="card card-custom">
                     <div class="card-body">
-                        @include('Users.Aktif.Partial._alert', ['text' => 'Pengguna adalah entitas yang memiliki <span class="text-primary">hak akses</span> dan <span class="text-primary">hak kelola</span> Aplikasi Zakat di Masjid Baiturrahman.'])
+                        @include('Users.Partial._alert', ['text' => 'Pengguna adalah entitas yang memiliki <span class="text-primary">hak akses</span> dan <span class="text-primary">hak kelola</span> Aplikasi Zakat di Masjid Baiturrahman.'])
 
                         <!--begin: Datatable-->
                         <table class="table table-bordered table-hover" id="dtable" style="margin-top: 13px !important">
@@ -38,11 +38,13 @@
 @endsection
 
 @section('content-modal')
-@include('Users.Aktif.Partial._modal')
+@include('Users.Partial._modal', ['status' => $status])
 @endsection
 
 @section('content-js')
 <script>
+var status = JSON.parse("{{ $status }}");
+
 var dtable = $('#dtable').DataTable({
     language : {
         paginate: {
@@ -51,7 +53,7 @@ var dtable = $('#dtable').DataTable({
         }
     },
     serverSide : true,
-    ajax : "/production/users/aktif",
+    ajax : "/production/users/" + status + "/aktif",
     columns : [
         { data: 'name', name: 'name', class : 'text-center align-middle' },
         { data: 'username', name: 'username', class : 'text-center align-middle' },
@@ -90,17 +92,17 @@ setInterval(function(){
 }, 60000);
 
 function dtableReload(searchKey = null){
-    // if(searchKey){
-    //     dtable.search(searchKey).draw();
-    // }
+    if(searchKey){
+        dtable.search(searchKey).draw();
+    }
 
     dtable.ajax.reload(function(){
         console.log("Refresh Automatic")
     }, false);
 
-    // $(".tooltip").tooltip("hide");
+    $(".tooltip").tooltip("hide");
 
-    // $(".popover").popover("hide");
+    $(".popover").popover("hide");
 }
 </script>
 @endsection

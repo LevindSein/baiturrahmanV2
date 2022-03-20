@@ -16,6 +16,8 @@
 </head>
 
 <body id="kt_body" class="header-fixed header-mobile-fixed header-bottom-enabled page-loading">
+    <div class="se-pre-con"></div>
+
     <!--begin::Main-->
 
     @include('Layout.Base._header-mobile')
@@ -58,10 +60,6 @@
     @endforeach
 
     <script>
-        // $(window).on('load', function() {
-        //     $(".se-pre-con").fadeIn("slow").fadeOut("slow");
-        // });
-
         $(document).ready(function() {
             $.fn.dataTable.ext.errMode = 'none';
             $('#dtable').on('error.dt', function(e, settings, techNote, message) {
@@ -83,6 +81,8 @@
     @include('Layout.Partial._modal')
 
     @include('Layout.Partial._message')
+
+    @include('Layout.Base._pre-loading')
 
     @yield('content-js')
 </body>

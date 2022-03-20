@@ -20,20 +20,24 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($status)
     {
         if(request()->ajax()){
             $data = User::select('id','username','name','level')->where([
-                ['status', 1],
+                ['status', $status],
                 ['id', '!=', Auth::id()]
             ]);
             return DataTables::of($data)
-                ->addColumn('action', function($data){
+                ->addColumn('action', function($data) use ($status){
                     $button = '';
                     if(Auth::user()->id != $data->id){
-                        $button  = '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="nonaktif btn btn-sm btn-clean btn-icon"><i class="fas fa-power-off"></i></a>';
+                        if($status == 1){
+                            $button  = '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                            $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
+                            $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
+                        } else {
+                            $button = '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="change btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
+                        }
                     }
                     return $button;
                 })
@@ -60,7 +64,13 @@ class UserController extends Controller
                 ->rawColumns(['action','level', 'name'])
                 ->make(true);
         }
-        return view('Users.Aktif.index');
+        if ($status <= 1)
+            return view('Users.index', [
+                'status' => $status,
+                'title'  => ($status == 1) ? 'Pengguna Aktif' : 'Pengguna Nonaktif'
+            ]);
+        else
+            abort(404);
     }
 
     /**
@@ -68,7 +78,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($status)
     {
         //
     }
@@ -79,9 +89,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $status)
     {
-        if($request->ajax()){
+        if($request->ajax() && $status == 1){
             $request->validate([
                 'tambah_username' => 'required|max:100|unique:App\Models\User,username',
                 'tambah_name' => 'required|max:100',
@@ -93,7 +103,7 @@ class UserController extends Controller
                 'name'     => $request->tambah_name,
                 'password' => Hash::make(sha1(md5(123456))),
                 'level'    => $request->tambah_level,
-                'status'   => 1
+                'status'   => $status
             ]);
 
             return response()->json(['success' => 'Data berhasil ditambah.']);
@@ -106,7 +116,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($status, $id)
     {
         //
     }
@@ -117,9 +127,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($status, $id)
     {
-        if(request()->ajax()){
+        if(request()->ajax() && $status == 1){
             try {
                 $data = User::findOrFail($id);
             } catch(ModelNotFoundException $e) {
@@ -137,9 +147,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $status, $id)
     {
-        if($request->ajax()){
+        if($request->ajax() && $status == 1){
             $request->validate([
                 'edit_name' => 'required|max:100',
                 'edit_level' => 'required|digits_between:1,2'
@@ -166,14 +176,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($status, $id)
     {
         //
     }
 
-    public function reset($id)
+    public function reset($status, $id)
     {
-        if(request()->ajax()){
+        if(request()->ajax() && $status == 1){
             try {
                 $data = User::findOrFail($id);
             } catch(ModelNotFoundException $e) {
@@ -188,7 +198,7 @@ class UserController extends Controller
         }
     }
 
-    public function nonaktif($id)
+    public function change($status, $id)
     {
         if(request()->ajax()){
             try {
@@ -197,11 +207,17 @@ class UserController extends Controller
                 return response()->json(['error' => "Data lost."]);
             }
 
-            $data->status = 0;
+            if($status == 1){
+                $data->status = 0;
+                $message = 'Data berhasil dinonaktifkan.';
+            } else {
+                $data->status = 1;
+                $message = 'Data berhasil diaktifkan.';
+            }
 
             $data->save();
 
-            return response()->json(['success' => 'Data berhasil dinonaktifkan.']);
+            return response()->json(['success' => $message]);
         }
     }
 }
