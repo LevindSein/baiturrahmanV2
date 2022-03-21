@@ -117,9 +117,7 @@ $(document).on('click', '.edit', function(e){
             else{
                 toastr.error("Gagal mengambil data.");
             }
-            setTimeout(() => {
-                $.unblockUI();
-            }, 500);
+            $.unblockUI();
         }
     });
 
@@ -220,7 +218,7 @@ $('#edit-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 500);
+            }, 750);
         }
     });
 });

@@ -12,14 +12,8 @@ class SearchController extends Controller
         $data = [];
         if($request->ajax()) {
             $data = AnotherUser::select('id', 'name', 'hp','family', 'stt_muzakki', 'stt_mustahik')
-            ->where([
-                ['family', null],
-                ['stt_muzakki', 1],
-            ])
-            ->orWhere([
-                ['family', null],
-                ['stt_mustahik', 1],
-            ])
+            ->where('stt_muzakki', 1)
+            ->orWhere('stt_mustahik', 1)
             ->where(function ($query) use ($request) {
                 $key = $request->q;
                 $query->where('name', 'LIKE', '%'.$key.'%')
@@ -35,23 +29,30 @@ class SearchController extends Controller
     public function anotherUserId(Request $request, $id){
         $data = [];
         if($request->ajax()) {
-            $data = AnotherUser::select('id', 'name', 'hp','family', 'stt_muzakki', 'stt_mustahik')
+            $data = AnotherUser::select('id', 'name', 'hp', 'family', 'stt_muzakki', 'stt_mustahik')
+            // ->where(function ($query) use ($id) {
+            //     $query
+            //     ->where('family', '!=', $id)
+            //     ->orWhereNull('family');
+            // })
             ->where(function ($query) use ($id) {
-                $query->where([
+                $query
+                ->where([
                     ['family', null],
                     ['stt_muzakki', 1],
-                    ['id', '!=', $id]
+                    ['id', '!=', $id],
                 ])
                 ->orWhere([
                     ['family', null],
                     ['stt_mustahik', 1],
-                    ['id', '!=', $id]
+                    ['id', '!=', $id],
                 ]);
             })
             ->where(function ($query) use ($request) {
                 $key = $request->q;
-                $query->where('name', 'LIKE', '%'.$key.'%')
-                      ->orWhere('hp', 'LIKE', '%'.$key.'%');
+                $query
+                ->where('name', 'LIKE', '%'.$key.'%')
+                ->orWhere('hp', 'LIKE', '%'.$key.'%');
             })
             ->orderBy('name','asc')
             ->limit(10)

@@ -99,7 +99,7 @@ class ProfileController extends Controller
             $request->validate([
                 'profil_username'     => 'required|max:100|alpha_num|unique:App\Models\User,username,'.$decrypted,
                 'profil_name'         => 'required|string|max:100',
-                'profil_hp'           => 'required|numeric|digits_between:11,15',
+                'profil_hp'           => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp,'.$decrypted,
                 'profil_address'      => 'required|string|max:255',
                 'profil_password_now' => 'required|min:6',
                 'profil_password_new' => 'nullable|min:6',

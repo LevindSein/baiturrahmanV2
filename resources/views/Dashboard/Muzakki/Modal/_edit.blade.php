@@ -57,6 +57,27 @@ $(document).on('click', '.edit', function(e){
     id = $(this).attr("id");
     edit_init();
 
+    $('#edit-family').select2({
+        placeholder: "Cari Nama Kepala Keluarga",
+        allowClear: true,
+        ajax: {
+            url: "/search/another-user/" + id,
+            dataType: 'json',
+            delay: 250,
+            cache: true,
+            processResults: function (data) {
+                return {
+                    results:  $.map(data, function (d) {
+                        return {
+                            id: d.id,
+                            text: d.name + ' (' + d.hp + ')'
+                        }
+                    })
+                };
+            },
+        }
+    });
+
     $.ajax({
         url: "/production/dashboard/muzakki/" + id + "/edit",
         cache: false,
@@ -84,6 +105,11 @@ $(document).on('click', '.edit', function(e){
                 $("#edit-name").val(data.success.name);
                 $("#edit-hp").val(data.success.hp);
                 $("#edit-address").val(data.success.address);
+
+                if(data.success.family){
+                    var family = new Option(data.success.memberOf.name + ' (' + data.success.memberOf.hp + ')', data.success.memberOf.id, false, false);
+                    $('#edit-family').append(family).trigger('change');
+                }
             }
 
             if(data.info){
@@ -113,15 +139,12 @@ $(document).on('click', '.edit', function(e){
             else{
                 toastr.error("Gagal mengambil data.");
             }
-            setTimeout(() => {
-                $.unblockUI();
-            }, 500);
+            $.unblockUI();
         }
     });
 
     $('#edit-modal').on('shown.bs.modal', function() {
         $("#edit-name").focus();
-        id = id;
     });
 });
 
@@ -217,30 +240,9 @@ $('#edit-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 500);
+            }, 750);
         }
     });
-});
-
-$('#edit-family').select2({
-    placeholder: "Cari Nama Kepala Keluarga",
-    allowClear: true,
-    ajax: {
-        url: "/search/another-user/" + id,
-        dataType: 'json',
-        delay: 250,
-        cache: true,
-        processResults: function (data) {
-            return {
-                results:  $.map(data, function (d) {
-                    return {
-                        id: d.id,
-                        text: d.name + ' (' + d.hp + ')'
-                    }
-                })
-            };
-        },
-    }
 });
 </script>
 <!--end::Javascript-->

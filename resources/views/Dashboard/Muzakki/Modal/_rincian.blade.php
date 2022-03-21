@@ -114,9 +114,7 @@ $(document).on('click', '.detail', function(e){
             else{
                 toastr.error("Gagal mengambil data.");
             }
-            setTimeout(() => {
-                $.unblockUI();
-            }, 500);
+            $.unblockUI();
         }
     });
 });

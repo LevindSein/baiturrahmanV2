@@ -169,7 +169,7 @@ $('#tambah-form').on('submit', function(e){
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 500);
+            }, 750);
         }
     });
 });

@@ -98,7 +98,7 @@ class UserController extends Controller
             $request->validate([
                 'tambah_username' => 'required|string|max:100|unique:App\Models\User,username',
                 'tambah_name'     => 'required|string|max:100',
-                'tambah_hp'       => 'required|numeric|digits_between:11,15',
+                'tambah_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp',
                 'tambah_address'  => 'required|string|max:255',
                 'tambah_level'    => 'required|numeric|digits_between:1,2',
             ]);
@@ -176,7 +176,7 @@ class UserController extends Controller
         if($request->ajax() && $status == 1){
             $request->validate([
                 'edit_name'     => 'required|string|max:100',
-                'edit_hp'       => 'required|numeric|digits_between:11,15',
+                'edit_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp,'.$id,
                 'edit_address'  => 'required|string|max:255',
                 'edit_level'    => 'required|numeric|digits_between:1,2'
             ]);

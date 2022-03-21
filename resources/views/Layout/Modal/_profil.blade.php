@@ -218,11 +218,11 @@
                 if(JSON.parse(data.responseText).success){
                     setTimeout(() => {
                         location.reload();
-                    }, 500);
+                    }, 750);
                 }
                 setTimeout(() => {
                     $.unblockUI();
-                }, 500);
+                }, 750);
             }
         });
     });

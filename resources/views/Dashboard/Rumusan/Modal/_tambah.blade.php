@@ -118,11 +118,11 @@ $('#tambah-form').on('submit', function(e){
                 $('#tambah-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
-                }, 500);
+                }, 750);
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 500);
+            }, 750);
         }
     });
 });

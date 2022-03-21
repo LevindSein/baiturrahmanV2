@@ -73,7 +73,7 @@ class MuzakkiController extends Controller
         if($request->ajax()){
             $request->validate([
                 'tambah_name'     => 'required|string|max:100',
-                'tambah_hp'       => 'required|numeric|digits_between:11,15',
+                'tambah_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\AnotherUser,hp',
                 'tambah_address'  => 'required|string|max:255',
             ]);
 
@@ -150,6 +150,17 @@ class MuzakkiController extends Controller
                 return response()->json(['error' => "Data lost."]);
             }
 
+            $data['memberOf'] = null;
+            if($data->family){
+                try {
+                    $memberOf = AnotherUser::findOrFail($data->family);
+                } catch(ModelNotFoundException $e) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+
+                $data['memberOf'] = $memberOf;
+            }
+
             return response()->json(['success' => $data]);
         }
     }
@@ -166,24 +177,26 @@ class MuzakkiController extends Controller
         if($request->ajax()){
             $request->validate([
                 'edit_name'     => 'required|string|max:100',
-                'edit_hp'       => 'required|numeric|digits_between:11,15',
+                'edit_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\AnotherUser,hp,'.$id,
                 'edit_address'  => 'required|string|max:255',
             ]);
 
             try {
-                $data = User::findOrFail($id);
+                $data = Muzakki::findOrFail($id);
             } catch(ModelNotFoundException $e) {
                 return response()->json(['error' => "Data lost."]);
             }
 
-            $data['name']     = $request->edit_name;
-            $data['hp']       = $request->edit_hp;
-            $data['address']  = $request->edit_address;
+            $data->name     = $request->edit_name;
+            $data->hp       = $request->edit_hp;
+            $data->address  = $request->edit_address;
             if($request->edit_family){
-                $data['family'] = $request->edit_family;
+                $data->family = $request->edit_family;
+            } else {
+                $data->family = null;
             }
 
-            $data->update($data);
+            $data->save();
 
             return response()->json(['success' => 'Data berhasil ditambah.']);
         }

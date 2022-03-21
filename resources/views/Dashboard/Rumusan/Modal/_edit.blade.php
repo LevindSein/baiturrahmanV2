@@ -89,12 +89,12 @@ $(".edit-rumus").click(function(e){
             console.log(data);
         },
         complete:function(data){
-            $.unblockUI();
             $("#edit-modal").modal("show");
 
             $('#edit-modal').on('shown.bs.modal', function() {
                 $("#edit-satuan").focus();
             });
+            $.unblockUI();
         }
     });
 })
@@ -175,11 +175,11 @@ $('#edit-form').on('submit', function(e){
                 $('#edit-modal').modal('hide');
                 setTimeout(() => {
                     location.reload();
-                }, 500);
+                }, 750);
             }
             setTimeout(() => {
                 $.unblockUI();
-            }, 500);
+            }, 750);
         }
     });
 });
