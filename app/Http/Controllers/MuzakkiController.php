@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\AnotherUser as Muzakki;
@@ -22,7 +20,7 @@ class MuzakkiController extends Controller
     public function index()
     {
         if(request()->ajax()){
-            $data = Muzakki::select('id', 'name', 'muzakki')
+            $data = Muzakki::select('id', 'name', 'muzakki', 'stt_muzakki')
             ->where([
                 ['muzakki', 1],
                 ['stt_muzakki', 1]

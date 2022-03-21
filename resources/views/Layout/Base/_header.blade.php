@@ -115,13 +115,13 @@
                                     </a>
                                 </li>
                                 @endif
-                                <li class="menu-item menu-item {{ (request()->is('production/dashboard/muzakki*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                <li class="menu-item {{ (request()->is('production/dashboard/muzakki*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                     <a href="{{url('production/dashboard/muzakki')}}" class="menu-link">
                                         <span class="menu-text">Muzakki</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/dashboard/mustahik*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/dashboard/mustahik')}}" class="menu-link">
                                         <span class="menu-text">Mustahik</span>
                                     </a>
                                 </li>

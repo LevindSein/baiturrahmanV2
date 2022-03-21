@@ -7,6 +7,7 @@ use App\Http\Controllers\RumusanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MuzakkiController;
+use App\Http\Controllers\MustahikController;
 use App\Http\Controllers\SearchController;
 
 /*
@@ -43,6 +44,8 @@ Route::middleware('checkauth')->group(function(){
             //end::LevelOne
 
             Route::resource('dashboard/muzakki', MuzakkiController::class);
+
+            Route::resource('dashboard/mustahik', MustahikController::class);
         });
         //end::LevelTwo
 
