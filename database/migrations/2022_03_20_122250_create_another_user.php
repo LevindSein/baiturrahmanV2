@@ -16,7 +16,7 @@ class CreateAnotherUser extends Migration
         Schema::create('another_user', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('hp', 15)->unique();
+            $table->string('hp', 13);
             $table->text('address');
             $table->bigInteger('family')->nullable();
             $table->boolean('muzakki')->nullable();

@@ -71,8 +71,9 @@ class MuzakkiController extends Controller
         if($request->ajax()){
             $request->validate([
                 'tambah_name'     => 'required|string|max:100',
-                'tambah_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\AnotherUser,hp',
+                'tambah_hp'       => 'required|numeric|digits_between:11,13',
                 'tambah_address'  => 'required|string|max:255',
+                'tambah_family'   => 'nullable|numeric'
             ]);
 
             $data['name']     = $request->tambah_name;
@@ -84,6 +85,9 @@ class MuzakkiController extends Controller
             $data['muzakki']  = 1;
             $data['stt_muzakki']  = 1;
             if($request->tambah_mustahik){
+                $request->validate([
+                    'tambah_type'     => 'required|numeric|min:1|max:8',
+                ]);
                 $data['mustahik']      = 1;
                 $data['stt_mustahik']  = 1;
                 $data['type_mustahik'] = $request->tambah_type;
@@ -175,8 +179,9 @@ class MuzakkiController extends Controller
         if($request->ajax()){
             $request->validate([
                 'edit_name'     => 'required|string|max:100',
-                'edit_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\AnotherUser,hp,'.$id,
+                'edit_hp'       => 'required|numeric|digits_between:11,13',
                 'edit_address'  => 'required|string|max:255',
+                'edit_family'   => 'nullable|numeric'
             ]);
 
             try {
