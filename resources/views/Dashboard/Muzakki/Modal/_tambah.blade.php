@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <div class="col-9 col-form-label">
-                            <select required class="form-control" id="tambah-type" name="tambah_type">
+                            <select class="form-control" id="tambah-type" name="tambah_type">
                                 <option value="" disabled selected>Pilih Kategori Mustahik</option>
                                 <option value="1">Fakir</option>
                                 <option value="2">Miskin</option>

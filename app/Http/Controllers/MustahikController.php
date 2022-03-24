@@ -66,7 +66,27 @@ class MustahikController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->ajax()){
+            $request->validate([
+                'tambah_name'     => 'required|string|max:100',
+                'tambah_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\AnotherUser,hp',
+                'tambah_address'  => 'required|string|max:255',
+            ]);
+
+            $data['name']     = $request->tambah_name;
+            $data['hp']       = $request->tambah_hp;
+            $data['address']  = $request->tambah_address;
+            if($request->tambah_family){
+                $data['family'] = $request->tambah_family;
+            }
+            $data['mustahik']  = 1;
+            $data['stt_mustahik']  = 1;
+            $data['type_mustahik'] = $request->tambah_type;
+
+            Mustahik::insert($data);
+
+            return response()->json(['success' => 'Data berhasil ditambah.']);
+        }
     }
 
     /**

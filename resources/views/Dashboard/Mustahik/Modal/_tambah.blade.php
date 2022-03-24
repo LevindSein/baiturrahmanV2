@@ -22,34 +22,24 @@
                         <label>Alamat <span class="text-danger">*</span></label>
                         <textarea required rows="5" id="tambah-address" name="tambah_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Kategori <span class="text-danger">*</span></label>
+                        <select required class="form-control" id="tambah-type" name="tambah_type">
+                            <option value="" disabled selected>Pilih Kategori Mustahik</option>
+                            <option value="1">Fakir</option>
+                            <option value="2">Miskin</option>
+                            <option value="3">Fi Sabilillah</option>
+                            <option value="4">Mualaf</option>
+                            <option value="5">Gharim</option>
+                            <option value="6">Ibnu Sabil</option>
+                            <option value="7">Amil Zakat</option>
+                            <option value="8">Riqab</option>
+                        </select>
+                    </div>
                     <div class="form-group" id="tambah-pilih">
                         <label>Pilih Kepala Keluarga</label>
                         <select class="form-control" id="tambah-family" name="tambah_family" style="width:100%"></select>
-                        <span class="form-text text-muted">Pilih Kepala Keluarga jika Mustahik ditanggung</span>
-                    </div>
-                    <label>Checklist apabila Mustahik termasuk Mustahik</label>
-                    <div class="form-group row">
-                        <div class="col-3 col-form-label">
-                            <div class="checkbox-inline d-flex pt-3">
-                                <label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">
-                                    <input type="checkbox" name="tambah_mustahik" id="tambah-mustahik" />
-                                    <span></span>Mustahik
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-9 col-form-label">
-                            <select required class="form-control" id="tambah-type" name="tambah_type">
-                                <option value="" disabled selected>Pilih Kategori Mustahik</option>
-                                <option value="1">Fakir</option>
-                                <option value="2">Miskin</option>
-                                <option value="3">Fi Sabilillah</option>
-                                <option value="4">Mualaf</option>
-                                <option value="5">Gharim</option>
-                                <option value="6">Ibnu Sabil</option>
-                                <option value="7">Amil Zakat</option>
-                                <option value="8">Riqab</option>
-                            </select>
-                        </div>
+                        <span class="form-text text-muted">Opsional</span>
                     </div>
                     <div class="form-group">
                         <label><sup><span class="text-danger">*) Wajib diisi.</span></sup></label>
@@ -72,8 +62,7 @@ function tambah_init(){
     $("#tambah-hp").val('');
     $("#tambah-address").val('');
     $("#tambah-family").val('').html('');
-    $("#tambah-mustahik").prop('checked', false);
-    $("#tambah-type").val('').prop('disabled', true).prop('required', false);
+    $("#tambah-type").val('');
 }
 
 $("#add").click(function(){
@@ -120,26 +109,6 @@ $('#tambah-family').select2({
         },
     }
 });
-
-function tambahMustahik(data){
-    if(data == 'show'){
-        $("#tambah-type").prop('disabled', false).prop('required', true);
-    }
-    else{
-        $("#tambah-type").val('').prop('disabled', true).prop('required', false);
-    }
-}
-
-function checkTambahMustahik(){
-    if($("#tambah-mustahik").is(":checked")){
-        tambahMustahik("show");
-    }
-    else{
-        tambahMustahik("hide");
-    }
-}
-
-$('#tambah-mustahik').click(checkTambahMustahik).each(checkTambahMustahik);
 
 $("#tambah-form").keypress(function(e) {
     if(e.which == 13) {
