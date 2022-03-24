@@ -11,7 +11,7 @@
             <form id="hapus-form">
                 <div class="modal-body">
                     <p>
-                        Tekan tombol <span class="text-danger status"></span>, jika anda yakin untuk menghapus muzakki.
+                        Tekan tombol <span class="text-danger status"></span>, jika anda yakin untuk menghapus mustahik.
                     </p>
                 </div>
                 <div class="modal-footer">

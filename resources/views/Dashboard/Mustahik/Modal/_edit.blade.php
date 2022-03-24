@@ -22,6 +22,20 @@
                         <label>Alamat <span class="text-danger">*</span></label>
                         <textarea required rows="5" id="edit-address" name="edit_address" autocomplete="off" placeholder="Ketikkan Alamat disini" maxlength="255" class="form-control"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label>Kategori <span class="text-danger">*</span></label>
+                        <select required class="form-control" id="edit-type" name="edit_type">
+                            <option value="" disabled selected>Pilih Kategori Mustahik</option>
+                            <option value="1">Fakir</option>
+                            <option value="2">Miskin</option>
+                            <option value="3">Fi Sabilillah</option>
+                            <option value="4">Mualaf</option>
+                            <option value="5">Gharim</option>
+                            <option value="6">Ibnu Sabil</option>
+                            <option value="7">Amil Zakat</option>
+                            <option value="8">Riqab</option>
+                        </select>
+                    </div>
                     <div class="form-group" id="edit-pilih">
                         <label>Pilih Kepala Keluarga</label>
                         <select class="form-control" id="edit-family" name="edit_family" style="width:100%"></select>
@@ -48,6 +62,7 @@ function edit_init(){
     $("#edit-hp").val('');
     $("#edit-address").val('');
     $("#edit-family").val('').html('');
+    $("#tambah-type").val('');
 }
 
 var id;
@@ -110,6 +125,8 @@ $(document).on('click', '.edit', function(e){
                     var family = new Option(data.success.memberOf.name + ' (' + data.success.memberOf.hp + ')', data.success.memberOf.id, false, false);
                     $('#edit-family').append(family).trigger('change');
                 }
+
+                $("#edit-type").val(data.success.type_mustahik)
             }
 
             if(data.info){

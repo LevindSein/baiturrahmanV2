@@ -16,19 +16,14 @@ class AnotherUser extends Model
         'address',
         'family',
         'muzakki',
+        'stt_muzakki',
         'mustahik',
-        'type',
-        'status'
+        'stt_mustahik',
+        'type_mustahik'
     ];
 
-    public function __construct($type = 7)
-    {
-        $this->type   = $type;
-    }
-
-    public function __toString()
-    {
-        switch ($this->type) {
+    public static function kategori($type = 7){
+        switch ($type) {
             case 1 :
                 return 'Fakir';
                 break;

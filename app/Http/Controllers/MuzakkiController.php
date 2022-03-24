@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use Illuminate\Support\Facades\Validator;
+
 use App\Models\AnotherUser as Muzakki;
 use App\Models\AnotherUser;
 use DataTables;
@@ -69,28 +71,43 @@ class MuzakkiController extends Controller
     public function store(Request $request)
     {
         if($request->ajax()){
-            $request->validate([
-                'tambah_name'     => 'required|string|max:100',
-                'tambah_hp'       => 'required|numeric|digits_between:11,13',
-                'tambah_address'  => 'required|string|max:255',
-                'tambah_family'   => 'nullable|numeric'
-            ]);
+            //Validator
+            $input['nama']             = $request->tambah_name;
+            $input['hp']               = str_replace(['-', '_'], '', $request->tambah_hp);
+            $input['alamat']           = $request->tambah_address;
+            $input['keluarga']         = $request->tambah_family;
 
-            $data['name']     = $request->tambah_name;
-            $data['hp']       = $request->tambah_hp;
-            $data['address']  = $request->tambah_address;
+            Validator::make($input, [
+                'nama'                 => 'required|string|max:100',
+                'hp'                   => 'required|numeric|digits_between:11,13',
+                'alamat'               => 'required|string|max:255',
+                'keluarga'             => 'nullable|numeric'
+            ])->validate();
+            //End Validator
+
+            $data['name']              = $input['nama'];
+            $data['hp']                = $input['hp'];
+            $data['address']           = $input['alamat'];
+
             if($request->tambah_family){
-                $data['family'] = $request->tambah_family;
+                $data['family']        = $request->tambah_family;
             }
-            $data['muzakki']  = 1;
-            $data['stt_muzakki']  = 1;
+
+            $data['muzakki']           = 1;
+            $data['stt_muzakki']       = 1;
+
             if($request->tambah_mustahik){
-                $request->validate([
-                    'tambah_type'     => 'required|numeric|min:1|max:8',
-                ]);
+                //Validator
+                $input['kategori']     = $request->tambah_type;
+
+                Validator::make($input, [
+                    'kategori'         => 'required|numeric|min:1|max:8',
+                ])->validate();
+                //End Validator
+
                 $data['mustahik']      = 1;
                 $data['stt_mustahik']  = 1;
-                $data['type_mustahik'] = $request->tambah_type;
+                $data['type_mustahik'] = $input['kategori'];
             }
 
             Muzakki::insert($data);
@@ -177,12 +194,19 @@ class MuzakkiController extends Controller
     public function update(Request $request, $id)
     {
         if($request->ajax()){
-            $request->validate([
-                'edit_name'     => 'required|string|max:100',
-                'edit_hp'       => 'required|numeric|digits_between:11,13',
-                'edit_address'  => 'required|string|max:255',
-                'edit_family'   => 'nullable|numeric'
-            ]);
+            //Validator
+            $input['nama']     = $request->edit_name;
+            $input['hp']       = str_replace(['-', '_'], '', $request->edit_hp);
+            $input['alamat']   = $request->edit_address;
+            $input['keluarga'] = $request->edit_family;
+
+            Validator::make($input, [
+                'nama'         => 'required|string|max:100',
+                'hp'           => 'required|numeric|digits_between:11,13',
+                'alamat'       => 'required|string|max:255',
+                'keluarga'     => 'nullable|numeric'
+            ])->validate();
+            //End Validator
 
             try {
                 $data = Muzakki::findOrFail($id);
@@ -190,13 +214,14 @@ class MuzakkiController extends Controller
                 return response()->json(['error' => "Data lost."]);
             }
 
-            $data->name     = $request->edit_name;
-            $data->hp       = $request->edit_hp;
-            $data->address  = $request->edit_address;
+            $data->name        = $input['nama'];
+            $data->hp          = $input['hp'];
+            $data->address     = $input['alamat'];
+
             if($request->edit_family){
-                $data->family = $request->edit_family;
+                $data->family  = $input['keluarga'];
             } else {
-                $data->family = null;
+                $data->family  = null;
             }
 
             $data->save();

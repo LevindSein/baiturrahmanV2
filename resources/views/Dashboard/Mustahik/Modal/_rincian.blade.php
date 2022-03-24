@@ -15,6 +15,8 @@
                 <h6 id="showHp"></h6>
                 <small class="text-muted pt-4 db">Status</small>
                 <h6 id="showStatus"></h6>
+                <small class="text-muted pt-4 db">Kategori</small>
+                <h6 id="showKategori"></h6>
                 <small class="text-muted pt-4 db">Alamat</small>
                 <h6 id="showAlamat"></h6>
                 <small class="text-muted pt-4 db">Keanggotaan</small>
@@ -66,8 +68,11 @@ $(document).on('click', '.detail', function(e){
             if(data.success){
                 $("#showNama").text(data.success.name);
                 $("#showHp").text(data.success.hp);
-                $("#showStatus").html((data.success.stt_muzakki == 1) ? "<span class='text-success'>Aktif</span>" : "<span class='text-danger'>Nonaktif</span>" );
+                $("#showStatus").html((data.success.stt_mustahik == 1) ? "<span class='text-success'>Aktif</span>" : "<span class='text-danger'>Nonaktif</span>" );
+                $("#showKategori").text(data.success.kategori);
                 $("#showAlamat").text(data.success.address);
+
+                console.log(data.success);
 
                 if(data.success.family){
                     family += "Anggota Keluarga dari <span class='text-primary'>" + data.success.memberOf.name + "</span>";

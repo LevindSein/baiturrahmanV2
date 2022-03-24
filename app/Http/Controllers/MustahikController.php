@@ -70,16 +70,14 @@ class MustahikController extends Controller
     {
         if($request->ajax()){
             //Validator
-            $input                 = $request->all();
-
             $input['nama']         = $request->tambah_name;
-            $input['hp']           = str_replace('-', '', $request->tambah_hp);
+            $input['hp']           = str_replace(['-', '_'], '', $request->tambah_hp);
             $input['alamat']       = $request->tambah_address;
             $input['kategori']     = $request->tambah_type;
             $input['keluarga']     = $request->tambah_family;
 
             Validator::make($input, [
-                'nama'             => 'required|string|max:100',
+                'nama'             => 'required|string|max:10',
                 'hp'               => 'required|numeric|digits_between:11,13',
                 'alamat'           => 'required|string|max:255',
                 'kategori'         => 'required|numeric|min:1|max:8',
@@ -87,17 +85,17 @@ class MustahikController extends Controller
             ])->validate();
             //End Validator
 
-            $data['name']          = $request->tambah_name;
-            $data['hp']            = str_replace('-', '', $request->tambah_hp);
-            $data['address']       = $request->tambah_address;
+            $data['name']          = $input['nama'];
+            $data['hp']            = $input['hp'];
+            $data['address']       = $input['alamat'];
 
             if($request->tambah_family){
-                $data['family']    = $request->tambah_family;
+                $data['family']    = $input['keluarga'];
             }
 
             $data['mustahik']      = 1;
             $data['stt_mustahik']  = 1;
-            $data['type_mustahik'] = $request->tambah_type;
+            $data['type_mustahik'] = $input['kategori'];
 
             Mustahik::insert($data);
 
@@ -113,7 +111,35 @@ class MustahikController extends Controller
      */
     public function show($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $data = Mustahik::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data['kategori'] = AnotherUser::kategori($data->type_mustahik);
+
+            $data['memberOf'] = null;
+            if($data->family){
+                try {
+                    $memberOf = AnotherUser::findOrFail($data->family);
+                } catch(ModelNotFoundException $e) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+
+                $data['memberOf'] = $memberOf;
+            }
+
+            $families = AnotherUser::where('family', $id)->select('id', 'name')->get();
+            if($families->count() > 0){
+                $data['families'] = $families;
+            } else {
+                $data['families'] = null;
+            }
+
+            return response()->json(['success' => $data]);
+        }
     }
 
     /**
@@ -124,7 +150,35 @@ class MustahikController extends Controller
      */
     public function edit($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $data = Mustahik::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data['kategori'] = AnotherUser::kategori($data->type_mustahik);
+
+            $data['memberOf'] = null;
+            if($data->family){
+                try {
+                    $memberOf = AnotherUser::findOrFail($data->family);
+                } catch(ModelNotFoundException $e) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+
+                $data['memberOf'] = $memberOf;
+            }
+
+            $families = AnotherUser::where('family', $id)->select('id', 'name')->get();
+            if($families->count() > 0){
+                $data['families'] = $families;
+            } else {
+                $data['families'] = null;
+            }
+
+            return response()->json(['success' => $data]);
+        }
     }
 
     /**
@@ -136,7 +190,44 @@ class MustahikController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->ajax()){
+            //Validator
+            $input['nama']       = $request->edit_name;
+            $input['hp']         = str_replace(['-', '_'], '', $request->edit_hp);
+            $input['alamat']     = $request->edit_address;
+            $input['kategori']   = $request->edit_type;
+            $input['keluarga']   = $request->edit_family;
+
+            Validator::make($input, [
+                'nama'           => 'required|string|max:100',
+                'hp'             => 'required|numeric|digits_between:11,13',
+                'alamat'         => 'required|string|max:255',
+                'kategori'       => 'required|numeric|min:1|max:8',
+                'keluarga'       => 'nullable|numeric'
+            ])->validate();
+            //End Validator
+
+            try {
+                $data = Mustahik::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->name          = $input['nama'];
+            $data->hp            = $input['hp'];
+            $data->address       = $input['alamat'];
+            $data->type_mustahik = $input['kategori'];
+
+            if($request->edit_family){
+                $data->family    = $input['keluarga'];
+            } else {
+                $data->family    = null;
+            }
+
+            $data->save();
+
+            return response()->json(['success' => 'Data berhasil ditambah.']);
+        }
     }
 
     /**
@@ -147,6 +238,18 @@ class MustahikController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(request()->ajax()){
+            try {
+                $data = Mustahik::findOrFail($id);
+            } catch(ModelNotFoundException $e) {
+                return response()->json(['error' => "Data lost."]);
+            }
+
+            $data->stt_mustahik = 0;
+
+            $data->save();
+
+            return response()->json(['success' => "Data berhasil dihapus."]);
+        }
     }
 }
