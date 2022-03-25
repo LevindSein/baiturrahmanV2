@@ -21,6 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>Nama</th>
+                                    <th>Kategori</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -52,6 +53,7 @@ var dtable = $('#dtable').DataTable({
     ajax : "/production/dashboard/mustahik",
     columns : [
         { data: 'name', name: 'name', class : 'text-center align-middle' },
+        { data: 'type_mustahik', name: 'type_mustahik', class : 'text-center align-middle' },
         { data: 'action', name: 'action', class : 'text-center align-middle' },
     ],
     stateSave : true,
@@ -60,8 +62,8 @@ var dtable = $('#dtable').DataTable({
     aLengthMenu : [[5,10,25,50,100], [5,10,25,50,100]],
     order : [[ 0, "asc" ]],
     aoColumnDefs: [
-        { "bSortable": false, "aTargets": [1] },
-        { "bSearchable": false, "aTargets": [1] }
+        { "bSortable": false, "aTargets": [2] },
+        { "bSearchable": false, "aTargets": [1,2] }
     ],
     scrollY : "50vh",
     scrollX : true,

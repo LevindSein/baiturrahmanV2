@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 use App\Models\AnotherUser as Mustahik;
 use App\Models\AnotherUser;
@@ -20,7 +21,7 @@ class MustahikController extends Controller
     public function index()
     {
         if(request()->ajax()){
-            $data = Mustahik::select('id', 'name', 'mustahik', 'stt_mustahik')
+            $data = Mustahik::select('id', 'name', 'mustahik', 'stt_mustahik', 'type_mustahik')
             ->where([
                 ['mustahik', 1],
                 ['stt_mustahik', 1]
@@ -28,9 +29,9 @@ class MustahikController extends Controller
             return DataTables::of($data)
             ->addColumn('action', function($data){
                 $button = '';
-                $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
-                $button .= '<a type="button" data-toggle="tooltip" title="Hapus" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-trash"></i></a>';
-                $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Hapus" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-trash"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
                 return $button;
             })
             ->editColumn('name', function($data){
@@ -44,7 +45,11 @@ class MustahikController extends Controller
                     return $name;
                 }
             })
-            ->rawColumns(['action','name'])
+            ->editColumn('type_mustahik', function($data){
+                $button = '<span class="label label-lg font-weight-bold label-inline label-light-primary">' . Mustahik::kategori($data->type_mustahik) . '</span>';
+                return $button;
+            })
+            ->rawColumns(['action', 'name', 'type_mustahik'])
             ->make(true);
         }
         return view('Dashboard.Mustahik.index');
@@ -77,7 +82,7 @@ class MustahikController extends Controller
             $input['keluarga']     = $request->tambah_family;
 
             Validator::make($input, [
-                'nama'             => 'required|string|max:10',
+                'nama'             => 'required|string|max:100',
                 'hp'               => 'required|numeric|digits_between:11,13',
                 'alamat'           => 'required|string|max:255',
                 'kategori'         => 'required|numeric|min:1|max:8',
@@ -113,8 +118,14 @@ class MustahikController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = Mustahik::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Mustahik::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -152,8 +163,14 @@ class MustahikController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = Mustahik::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Mustahik::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -208,8 +225,14 @@ class MustahikController extends Controller
             //End Validator
 
             try {
-                $data = Mustahik::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Mustahik::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -240,8 +263,14 @@ class MustahikController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = Mustahik::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Mustahik::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -96,14 +97,23 @@ class ProfileController extends Controller
                 return response()->json(['error' => "Data tidak valid."]);
             }
 
-            $request->validate([
-                'profil_username'     => 'required|max:100|alpha_num|unique:App\Models\User,username,'.$decrypted,
-                'profil_name'         => 'required|string|max:100',
-                'profil_hp'           => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp,'.$decrypted,
-                'profil_address'      => 'required|string|max:255',
-                'profil_password_now' => 'required|min:6',
-                'profil_password_new' => 'nullable|min:6',
-            ]);
+            //Validator
+            $input['username']          = strtolower($request->profil_username);
+            $input['nama']              = $request->profil_name;
+            $input['hp']                = str_replace(['-', '_'], '', $request->profil_hp);
+            $input['alamat']            = $request->profil_address;
+            $input['password_sekarang'] = $request->profil_password_now;
+            $input['password_baru']     = $request->profil_password_new;
+
+            Validator::make($input, [
+                'username'          => 'required|max:100|alpha_num|unique:App\Models\User,username,'.$decrypted,
+                'nama'              => 'required|string|max:100',
+                'hp'                => 'required|numeric|digits_between:11,13',
+                'alamat'            => 'required|string|max:255',
+                'password_sekarang' => 'required|min:6',
+                'password_baru'     => 'nullable|min:6',
+            ])->validate();
+            //End Validator
 
             try {
                 $data = User::findOrFail($decrypted);
@@ -111,16 +121,23 @@ class ProfileController extends Controller
                 return response()->json(['error' => "Data lost."]);
             }
 
-            $data->username = $request->profil_username;
-            $data->name = $request->profil_name;
-            $data->hp = $request->profil_hp;
-            $data->address = $request->profil_address;
+            $data->username = $input['username'];
+            $data->name     = $input['nama'];
+            $data->hp       = $input['hp'];
+            $data->address  = $input['alamat'];
+
+            $password = $data->password;
 
             if($request->profil_password_new){
-                $data->password = Hash::make(sha1(md5($request->profil_password_new)));
+                $data->password = Hash::make(sha1(md5($input['password_baru'])));
             }
 
-            $data->save();
+            if(Hash::check(sha1(md5($input['password_sekarang'])), $password)){
+                $data->save();
+            }
+            else{
+                return response()->json(['error' => "Password sekarang tidak cocok."]);
+            }
 
             return response()->json(['success' => "Data berhasil disimpan."]);
         }

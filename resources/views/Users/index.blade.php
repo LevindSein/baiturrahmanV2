@@ -66,7 +66,7 @@ var dtable = $('#dtable').DataTable({
     aLengthMenu : [[5,10,25,50,100], [5,10,25,50,100]],
     order : [[ 0, "asc" ]],
     aoColumnDefs: [
-        { "bSortable": false, "aTargets": [2, 3] },
+        { "bSortable": false, "aTargets": [3] },
         { "bSearchable": false, "aTargets": [2, 3] }
     ],
     scrollY : "50vh",

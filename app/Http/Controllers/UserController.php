@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -24,7 +26,8 @@ class UserController extends Controller
     public function index($status)
     {
         if(request()->ajax()){
-            $data = User::select('id','username','name','level')->where([
+            $data = User::select('id','username','name','level')
+            ->where([
                 ['status', $status],
                 ['level', '<=', 2],
                 ['id', '!=', Auth::id()]
@@ -34,13 +37,13 @@ class UserController extends Controller
                 $button = '';
                 if(Auth::user()->id != $data->id){
                     if($status == 1){
-                        $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
-                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Reset Password" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="reset btn btn-sm btn-clean btn-icon"><i class="fas fa-key-skeleton"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Nonaktifkan" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-times"></i></a>';
                     } else {
-                        $button .= '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
+                        $button .= '<a type="button" data-toggle="tooltip" title="Aktifkan" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-check"></i></a>';
                     }
-                    $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
+                    $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
                 }
                 return $button;
             })
@@ -95,28 +98,36 @@ class UserController extends Controller
     public function store(Request $request, $status)
     {
         if($request->ajax() && $status == 1){
-            $request->validate([
-                'tambah_username' => 'required|string|max:100|unique:App\Models\User,username',
-                'tambah_name'     => 'required|string|max:100',
-                'tambah_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp',
-                'tambah_address'  => 'required|string|max:255',
-                'tambah_level'    => 'required|numeric|digits_between:1,2',
-            ]);
+            //Validator
+            $input['username']     = strtolower($request->tambah_username);
+            $input['nama']         = $request->tambah_name;
+            $input['hp']           = str_replace(['-', '_'], '', $request->tambah_hp);
+            $input['alamat']       = $request->tambah_address;
+            $input['level']        = $request->tambah_level;
+
+            Validator::make($input, [
+                'username' => 'required|string|max:100|unique:App\Models\User,username',
+                'nama'     => 'required|string|max:100',
+                'hp'       => 'required|numeric|digits_between:11,13',
+                'alamat'   => 'required|string|max:255',
+                'level'    => 'required|numeric|digits_between:1,2',
+            ])->validate();
+            //End Validator
 
             User::insert([
-                'username' => strtolower($request->tambah_username),
-                'name'     => $request->tambah_name,
-                'hp'       => $request->tambah_hp,
+                'username' => $input['username'],
+                'name'     => $input['nama'],
+                'hp'       => $input['hp'],
                 'password' => Hash::make(sha1(md5(123456))),
-                'address'  => $request->tambah_address,
-                'level'    => $request->tambah_level,
+                'address'  => $input['alamat'],
+                'level'    => $input['level'],
                 'status'   => 1
             ]);
 
             Mustahik::insert([
-                'name'          => $request->tambah_name,
-                'hp'            => $request->tambah_hp,
-                'address'       => $request->tambah_address,
+                'name'          => $input['nama'],
+                'hp'            => $input['hp'],
+                'address'       => $input['alamat'],
                 'mustahik'      => 1,
                 'stt_mustahik'  => 1,
                 'type_mustahik' => 7,
@@ -136,8 +147,14 @@ class UserController extends Controller
     {
         if(request()->ajax() && $status == 1){
             try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = User::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -155,8 +172,14 @@ class UserController extends Controller
     {
         if(request()->ajax() && $status == 1){
             try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = User::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -174,24 +197,37 @@ class UserController extends Controller
     public function update(Request $request, $status, $id)
     {
         if($request->ajax() && $status == 1){
-            $request->validate([
-                'edit_name'     => 'required|string|max:100',
-                'edit_hp'       => 'required|numeric|digits_between:11,15|unique:App\Models\User,hp,'.$id,
-                'edit_address'  => 'required|string|max:255',
-                'edit_level'    => 'required|numeric|digits_between:1,2'
-            ]);
+            //Validator
+            $input['nama']         = $request->edit_name;
+            $input['hp']           = str_replace(['-', '_'], '', $request->edit_hp);
+            $input['alamat']       = $request->edit_address;
+            $input['level']        = $request->edit_level;
+
+            Validator::make($input, [
+                'nama'     => 'required|string|max:100',
+                'hp'       => 'required|numeric|digits_between:11,13',
+                'alamat'   => 'required|string|max:255',
+                'level'    => 'required|numeric|digits_between:1,2',
+            ])->validate();
+            //End Validator
 
             try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = User::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
             $data->update([
-                'name'    => $request->edit_name,
-                'hp'      => $request->edit_hp,
-                'address' => $request->edit_address,
-                'level'   => $request->edit_level
+                'name'    => $input['nama'],
+                'hp'      => $input['hp'],
+                'address' => $input['alamat'],
+                'level'   => $input['level']
             ]);
 
             return response()->json(['success' => "Data berhasil disimpan."]);
@@ -208,8 +244,14 @@ class UserController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = User::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -231,8 +273,14 @@ class UserController extends Controller
     {
         if(request()->ajax() && $status == 1){
             try {
-                $data = User::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = User::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 

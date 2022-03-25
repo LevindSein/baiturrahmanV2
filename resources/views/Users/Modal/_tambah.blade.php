@@ -16,11 +16,11 @@
                     </div>
                     <div class="form-group">
                         <label>Username (untuk Login) <span class="text-danger">*</span></label>
-                        <input required type="text" id="tambah-username" name="tambah_username" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" />
+                        <input required type="text" id="tambah-username" name="tambah_username" autocomplete="off" maxlength="100" class="form-control" placeholder="Masukkan Nama Pengguna" style="text-transform: lowercase;"/>
                     </div>
                     <div class="form-group">
                         <label>Nomor HP <span class="text-danger">*</span></label>
-                        <input required type="tel" id="tambah-hp" name="tambah_hp" autocomplete="off" minlength="11" maxlength="15" placeholder="0852123xxxxx" class="phone form-control" />
+                        <input required type="text" id="tambah-hp" name="tambah_hp" autocomplete="off" minlength="11" maxlength="15" placeholder="08xx-xxxx-xxxxx" class="phone form-control" />
                     </div>
                     <div class="form-group">
                         <label>Level Pengguna <span class="text-danger">*</span></label>
@@ -89,6 +89,11 @@ $('.phone').on('input change', function(e) {
 $('.phone').on('keypress', function(e) {
     keys = ['0','1','2','3','4','5','6','7','8','9']
     return keys.indexOf(e.key) > -1
+});
+
+// phone number format
+$("#tambah-hp").inputmask("mask", {
+    "mask": "9999-9999-99999"
 });
 
 $("#tambah-form").keypress(function(e) {

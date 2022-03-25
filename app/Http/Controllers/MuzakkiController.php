@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 use App\Models\AnotherUser as Muzakki;
 use App\Models\AnotherUser;
@@ -30,9 +31,9 @@ class MuzakkiController extends Controller
             return DataTables::of($data)
             ->addColumn('action', function($data){
                 $button = '';
-                $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
-                $button .= '<a type="button" data-toggle="tooltip" title="Hapus" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-trash"></i></a>';
-                $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.$data->id.'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Edit" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="edit btn btn-sm btn-clean btn-icon"><i class="fas fa-marker"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Hapus" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="delete btn btn-sm btn-clean btn-icon"><i class="fas fa-trash"></i></a>';
+                $button .= '<a type="button" data-toggle="tooltip" title="Rincian" id="'.Crypt::encrypt($data->id).'" nama="'.substr($data->name, 0, 15).'" class="detail btn btn-sm btn-clean btn-icon"><i class="fas fa-info"></i></a>';
                 return $button;
             })
             ->editColumn('name', function($data){
@@ -126,8 +127,14 @@ class MuzakkiController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = Muzakki::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Muzakki::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -164,8 +171,14 @@ class MuzakkiController extends Controller
 
         if(request()->ajax()){
             try {
-                $data = Muzakki::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Muzakki::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -209,8 +222,14 @@ class MuzakkiController extends Controller
             //End Validator
 
             try {
-                $data = Muzakki::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Muzakki::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
@@ -240,8 +259,14 @@ class MuzakkiController extends Controller
     {
         if(request()->ajax()){
             try {
-                $data = Muzakki::findOrFail($id);
-            } catch(ModelNotFoundException $e) {
+                $decrypted = Crypt::decrypt($id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                return response()->json(['error' => "Data tidak valid."]);
+            }
+
+            try {
+                $data = Muzakki::findOrFail($decrypted);
+            } catch(ModelNotFoundException $err) {
                 return response()->json(['error' => "Data lost."]);
             }
 
