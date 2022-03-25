@@ -8,6 +8,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\MustahikController;
+use App\Http\Controllers\FitrahController;
+use App\Http\Controllers\ZISController;
+use App\Http\Controllers\OnProcessController;
+use App\Http\Controllers\SentController;
+use App\Http\Controllers\DeliveredController;
+use App\Http\Controllers\ReturnedController;
 use App\Http\Controllers\SearchController;
 
 /*
@@ -43,9 +49,22 @@ Route::middleware('checkauth')->group(function(){
             });
             //end::LevelOne
 
-            Route::resource('dashboard/muzakki', MuzakkiController::class);
+            Route::prefix('dashboard')->group(function(){
+                Route::resource('muzakki', MuzakkiController::class);
+                Route::resource('mustahik', MustahikController::class);
+            });
 
-            Route::resource('dashboard/mustahik', MustahikController::class);
+            Route::prefix('transaction')->group(function(){
+                Route::resource('fitrah', FitrahController::class);
+                Route::resource('ZIS', ZISController::class);
+            });
+
+            Route::prefix('distribution')->group(function(){
+                Route::resource('onprocess', OnProcessController::class);
+                Route::resource('sent', SentController::class);
+                Route::resource('delivered', DeliveredController::class);
+                Route::resource('returned', ReturnedController::class);
+            });
         });
         //end::LevelTwo
 

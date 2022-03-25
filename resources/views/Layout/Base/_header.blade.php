@@ -20,12 +20,12 @@
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item mr-3">
-                        <a href="javascript:void(0)" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Transaksi</a>
+                        <a href="javascript:void(0)" class="nav-link py-4 px-6 {{ (request()->is('production/transaction*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Transaksi</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item mr-3">
-                        <a href="javascript:void(0)" class="nav-link py-4 px-6" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Distribusi</a>
+                        <a href="javascript:void(0)" class="nav-link py-4 px-6 {{ (request()->is('production/distribution*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Distribusi</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -80,12 +80,12 @@
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item mr-2">
-                        <a href="javascript:void(0)" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Transaksi</a>
+                        <a href="javascript:void(0)" class="nav-link btn btn-clean {{ (request()->is('production/transaction*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_2" role="tab">Transaksi</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
                     <li class="nav-item mr-2">
-                        <a href="javascript:void(0)" class="nav-link btn btn-clean" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Distribusi</a>
+                        <a href="javascript:void(0)" class="nav-link btn btn-clean {{ (request()->is('production/distribution*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_3" role="tab">Distribusi</a>
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
@@ -132,24 +132,19 @@
                     </div>
                     <!--end::Tab Pane-->
                     <!--begin::Tab Pane-->
-                    <div class="tab-pane p-5 p-lg-0 justify-content-between" id="kt_header_tab_2">
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between {{ (request()->is('production/transaction*')) ? 'show active' : '' }}" id="kt_header_tab_2">
                         <!--begin::Menu-->
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item menu-item-active" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/transaction/fitrah*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/transaction/fitrah')}}" class="menu-link">
                                         <span class="menu-text">Zakat Fitrah</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
-                                        <span class="menu-text">Zakat Maal</span>
-                                    </a>
-                                </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
-                                        <span class="menu-text">Infaq</span>
+                                <li class="menu-item {{ (request()->is('production/transaction/ZIS*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/transaction/ZIS')}}" class="menu-link">
+                                        <span class="menu-text">ZIS</span>
                                     </a>
                                 </li>
                             </ul>
@@ -159,28 +154,28 @@
                     </div>
                     <!--end::Tab Pane-->
                     <!--begin::Tab Pane-->
-                    <div class="tab-pane p-5 p-lg-0 justify-content-between" id="kt_header_tab_3">
+                    <div class="tab-pane p-5 p-lg-0 justify-content-between {{ (request()->is('production/distribution*')) ? 'show active' : '' }}" id="kt_header_tab_3">
                         <!--begin::Menu-->
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                <li class="menu-item menu-item-active" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/distribution/onprocess*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/distribution/onprocess')}}" class="menu-link">
                                         <span class="menu-text">Diproses</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/distribution/sent*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/distribution/sent')}}" class="menu-link">
                                         <span class="menu-text">Dikirim</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/distribution/delivered*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/distribution/delivered')}}" class="menu-link">
                                         <span class="menu-text">Terkirim</span>
                                     </a>
                                 </li>
-                                <li class="menu-item menu-item" aria-haspopup="true">
-                                    <a href="javascript:void(0)" class="menu-link">
+                                <li class="menu-item {{ (request()->is('production/distribution/returned*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="{{url('production/distribution/returned')}}" class="menu-link">
                                         <span class="menu-text">Dikembalikan</span>
                                     </a>
                                 </li>
