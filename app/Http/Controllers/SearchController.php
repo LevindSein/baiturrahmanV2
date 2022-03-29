@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\AnotherUser;
+use App\Models\AnotherUser as Muzakki;
 
 class SearchController extends Controller
 {
@@ -53,6 +54,23 @@ class SearchController extends Controller
                 $query
                 ->where('name', 'LIKE', '%'.$key.'%')
                 ->orWhere('hp', 'LIKE', '%'.$key.'%');
+            })
+            ->orderBy('name','asc')
+            ->limit(10)
+            ->get();
+        }
+        return response()->json($data);
+    }
+
+    public function muzakki(Request $request){
+        $data = [];
+        if($request->ajax()) {
+            $data = Muzakki::select('id', 'name', 'hp', 'stt_muzakki')
+            ->where('stt_muzakki', 1)
+            ->where(function ($query) use ($request) {
+                $key = $request->q;
+                $query->where('name', 'LIKE', '%'.$key.'%')
+                      ->orWhere('hp', 'LIKE', '%'.$key.'%');
             })
             ->orderBy('name','asc')
             ->limit(10)

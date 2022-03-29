@@ -94,9 +94,11 @@
                     </li>
                     <!--end::Item-->
                     <!--begin::Item-->
+                    @if(Auth::user()->level == 1)
                     <li class="nav-item">
                         <a href="javascript:void(0)" class="nav-link btn btn-clean {{ (request()->is('production/users*')) ? 'active' : '' }}" data-toggle="tab" data-target="#kt_header_tab_5" role="tab">Pengguna</a>
                     </li>
+                    @endif
                     <!--end::Item-->
                 </ul>
                 <!--begin::Tab Navs-->
@@ -108,13 +110,11 @@
                         <div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
                             <!--begin::Nav-->
                             <ul class="menu-nav">
-                                @if(Auth::user()->level == 1)
                                 <li class="menu-item {{ (request()->is('production/dashboard/rumusan*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                     <a href="{{url('production/dashboard/rumusan')}}" class="menu-link">
                                         <span class="menu-text">Rumusan</span>
                                     </a>
                                 </li>
-                                @endif
                                 <li class="menu-item {{ (request()->is('production/dashboard/muzakki*')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                     <a href="{{url('production/dashboard/muzakki')}}" class="menu-link">
                                         <span class="menu-text">Muzakki</span>

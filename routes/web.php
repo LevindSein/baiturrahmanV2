@@ -40,9 +40,13 @@ Route::middleware('checkauth')->group(function(){
     Route::prefix('production')->group(function(){
         //begin::LevelTwo
         Route::middleware('leveltwo')->group(function(){
+            Route::get('dashboard/rumusan', [RumusanController::class, 'index']);
+
             //begin::LevelOne
             Route::middleware('levelone')->group(function(){
-                Route::resource('dashboard/rumusan', RumusanController::class);
+                Route::resource('dashboard/rumusan', RumusanController::class)->except([
+                    'index'
+                ]);
 
                 Route::post('users/{status}/aktif/reset/{id}', [UserController::class, 'reset']);
                 Route::resource('users/{status}/aktif', UserController::class);
@@ -73,4 +77,5 @@ Route::middleware('checkauth')->group(function(){
 
     Route::get('search/another-user/{id}', [SearchController::class, 'anotherUserId']);
     Route::get('search/another-user', [SearchController::class, 'anotherUser']);
+    Route::get('search/muzakki', [SearchController::class, 'muzakki']);
 });

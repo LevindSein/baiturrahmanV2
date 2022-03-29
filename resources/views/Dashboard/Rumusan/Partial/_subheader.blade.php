@@ -15,9 +15,11 @@
         <!--end::Info-->
         <!--begin::Toolbar-->
         <div class="d-flex align-items-center">
+            @if(Auth::user()->level == 1)
             <!--begin::Actions-->
             <a href="javascript:void(0)" id="add" class="btn btn-light-success font-weight-bolder btn-sm"><i class="fas fa-plus fa-sm"></i>@include('Dashboard.Rumusan.Partial._title')</a>
             <!--end::Actions-->
+            @endif
         </div>
         <!--end::Toolbar-->
     </div>

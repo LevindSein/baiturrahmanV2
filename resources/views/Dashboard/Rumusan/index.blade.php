@@ -25,10 +25,12 @@
                                 <div class="col-md-6">
                                     <div class="d-flex justify-content-between">
                                         <h3 class="text-primary">Kategori {{$d->kategori}}</h3>
+                                        @if(Auth::user()->level == 1)
                                         <div>
                                             <a href="javascript:void(0)"tabindex="-1" class="edit-rumus mr-2" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-edit text-primary"></i></a>
                                             <a href="javascript:void(0)"tabindex="-1" class="hapus-rumus" rumus-id="{{Crypt::encrypt($d->id)}}"><i class="fas fa-trash text-danger"></i></a>
                                         </div>
+                                        @endif
                                     </div>
                                     <hr>
                                     <div class="form-group row">
@@ -58,9 +60,11 @@
                             @endforeach
                             </div>
 
+                            @if(Auth::user()->level == 1)
                             <div class="col-sm-12 col-md-12 text-center">
                                 <button type="submit" class="btn btn-rounded btn-primary">Simpan</button>
                             </div>
+                            @endif
                         </form>
                     </div>
                 </div>
@@ -72,7 +76,9 @@
 @endsection
 
 @section('content-modal')
+@if(Auth::user()->level == 1)
 @include('Dashboard.Rumusan.Partial._modal')
+@endif
 @endsection
 
 @section('content-js')
