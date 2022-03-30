@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Fitrah;
 use App\Models\Period;
 use App\Models\AnotherUser as Muzakki;
+use App\Models\AnotherUser;
 use App\Models\Rumusan;
 
 use DataTables;
@@ -87,7 +88,15 @@ class FitrahController extends Controller
                 }
                 //End Hitungan
 
-                return response()->json(['success' => 'Rincian Zakat Fitrah didapatkan.']);
+                $data['rumusan'] = json_decode($rumusan->rumus);
+                $data['muzakki'] = $muzakki;
+
+                $family = AnotherUser::where('family', $muzakki->id)->get();
+                if($family){
+                    $data['family'] = $family;
+                }
+
+                return response()->json(['success' => $data]);
             } else {
                 //Submit Zakat Fitrah
                 return response()->json(['success' => "Data berhasil disimpan."]);

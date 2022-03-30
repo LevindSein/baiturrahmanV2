@@ -23,7 +23,7 @@ class RumusanSeeder extends Seeder
                 'rumus'    => json_encode([
                     'satuan'     => "Liter",
                     'alternatif' => "Liter",
-                    'rupiah'     => null,
+                    'rupiah'     => "8000",
                     'jiwa'       => "3.5"
                 ]),
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
@@ -34,7 +34,7 @@ class RumusanSeeder extends Seeder
                 'rumus'    => json_encode([
                     'satuan'     => "Kilogram",
                     'alternatif' => "Kg",
-                    'rupiah'     => null,
+                    'rupiah'     => "11000",
                     'jiwa'       => "2.5"
                 ]),
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),

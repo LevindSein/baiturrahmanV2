@@ -33,7 +33,7 @@
 </div>
 
 <div class="modal fade" id="tambah-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="tambah-modal" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Tambah @include('Transaction.Fitrah.Partial._title')</h5>
@@ -43,8 +43,21 @@
             </div>
             <form id="tambah-form">
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted pt-4 db">Rumusan</small>
+                            <h6 id="showRupiah"></h6>
+                            <h6 id="showJiwa"></h6>
+                            <small class="text-muted pt-4 db">Muzakki</small>
+                            <h6 id="showMuzakki"></h6>
+                            <div id="showFamily"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
 
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Batal</button>
@@ -124,8 +137,30 @@
             success:function(data)
             {
                 if(data.success){
-                    toastr.success(data.success);
                     $('#tambah-modal').modal('show');
+                    $('#showRupiah').text('Rp. ' + data.success.rumusan.rupiah.toLocaleString('id-ID') + ' per-' + data.success.rumusan.satuan);
+                    $('#showJiwa').text(data.success.rumusan.jiwa.toLocaleString('id-ID') + " " + data.success.rumusan.satuan + ' per-Jiwa');
+                    $('#showMuzakki').text(data.success.muzakki.name);
+
+                    var html = '';
+                    var banyak = 0;
+                    if(data.success.family.length > 1){
+                        html += '<div class="form-group">';
+                        html += '<small class="text-muted pt-4 db">Keluarga</small>';
+
+                        $.each(data.success.family, function(i, val){
+                            banyak++;
+                            html += '<div class="checkbox-inline d-flex pt-3">';
+                            html += '<label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">';
+                            html += '<input checked type="checkbox" name="tambah_muzakki[]" value="' + '{{Crypt::encrypt(' + val.id + ')}}" />';
+                            html += '<span></span>' + val.name;
+                            html += '</label>';
+                            html += '</div>';
+                        })
+
+                        html += '<div>'
+                    }
+                    $("#showFamily").html(html);
                 }
 
                 if(data.info){
