@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 
 use App\Models\Rumusan;
 
@@ -27,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::share('rumusan', Rumusan::get());
+        if(Schema::hasTable('rumusan')){
+            View::share('rumusan', Rumusan::get());
+        }
     }
 }

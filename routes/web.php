@@ -59,7 +59,10 @@ Route::middleware('checkauth')->group(function(){
             });
 
             Route::prefix('transaction')->group(function(){
-                Route::resource('fitrah', FitrahController::class);
+                Route::post('fitrah/{status}', [FitrahController::class, 'store']);
+                Route::resource('fitrah', FitrahController::class)->except([
+                    'store'
+                ]);
                 Route::resource('ZIS', ZISController::class);
             });
 

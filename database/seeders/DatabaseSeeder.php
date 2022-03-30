@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use Illuminate\Support\Facades\Artisan;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -17,5 +19,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UserSeeder::class);
         $this->call(RumusanSeeder::class);
+
+        Artisan::call('sync:period');
     }
 }

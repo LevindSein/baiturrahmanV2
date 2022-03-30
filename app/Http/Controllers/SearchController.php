@@ -31,11 +31,6 @@ class SearchController extends Controller
         $data = [];
         if($request->ajax()) {
             $data = AnotherUser::select('id', 'name', 'hp', 'family', 'stt_muzakki', 'stt_mustahik')
-            // ->where(function ($query) use ($id) {
-            //     $query
-            //     ->where('family', '!=', $id)
-            //     ->orWhereNull('family');
-            // })
             ->where(function ($query) use ($id) {
                 $query
                 ->where([

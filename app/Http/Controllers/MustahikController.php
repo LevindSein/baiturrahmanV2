@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 

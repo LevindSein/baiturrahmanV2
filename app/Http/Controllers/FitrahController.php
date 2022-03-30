@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Fitrah;
+use App\Models\Period;
+use App\Models\AnotherUser as Muzakki;
+use App\Models\Rumusan;
 
 use DataTables;
 
@@ -20,7 +26,13 @@ class FitrahController extends Controller
     public function index()
     {
         if(request()->ajax()){
-            $data = Fitrah::select('id', 'code', 'muzakki', 'jumlah', 'status')->where('status', 0);
+            $period = Period::latest('id')->first();
+
+            $data = Fitrah::select('id', 'code', 'muzakki', 'jumlah', 'status')
+            ->where([
+                ['status', 0],
+                ['period_id', $period->id]
+            ]);
             return DataTables::of($data)
             ->addColumn('action', function($data){
                 $button = '';
@@ -51,9 +63,36 @@ class FitrahController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $status)
     {
-        //
+        if($request->ajax()){
+            if($status == 0){
+                //Validator
+                $input['rumusan'] = $request->check_rumusan;
+                $input['muzakki'] = $request->check_muzakki;
+
+                Validator::make($input, [
+                    'rumusan' => 'required|numeric|exists:App\Models\Rumusan,id',
+                    'muzakki' => 'required|numeric|exists:App\Models\AnotherUser,id',
+                ])->validate();
+                //End Validator
+
+                //Hitungan
+                $data = array();
+                try {
+                    $rumusan = Rumusan::findOrFail($request->check_rumusan);
+                    $muzakki = Muzakki::findOrFail($request->check_muzakki);
+                } catch(ModelNotFoundException $err) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+                //End Hitungan
+
+                return response()->json(['success' => 'Rincian Zakat Fitrah didapatkan.']);
+            } else {
+                //Submit Zakat Fitrah
+                return response()->json(['success' => "Data berhasil disimpan."]);
+            }
+        }
     }
 
     /**
