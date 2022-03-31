@@ -14,7 +14,7 @@
                 <!--begin::Card-->
                 <div class="card card-custom">
                     <div class="card-body">
-                        @include('Dashboard.Rumusan.Partial._alert', ['text' => 'Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras (Bahan Pokok)</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.'])
+                        @include('Dashboard.Rumusan.Partial._alert', ['text' => 'Rumusan adalah takaran umum Zakat Fitrah berupa <span class="text-primary">Beras / Bahan Makanan Pokok</span> dan <span class="text-primary">Konversi Nilai Mata Uang</span> yang diberlakukan di Masjid Baiturrahman. <span class="text-primary">Isi sesuai dengan ketentuan</span>.'])
 
                         <form id="rumus-form">
                             <div class="row">

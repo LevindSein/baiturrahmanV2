@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Batal</button>
+                    <button class="btn btn-light-success font-weight-bold" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-success font-weight-bold">Check</button>
                 </div>
             </form>
@@ -33,7 +33,7 @@
 </div>
 
 <div class="modal fade" id="tambah-modal" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="tambah-modal" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Tambah @include('Transaction.Fitrah.Partial._title')</h5>
@@ -42,18 +42,20 @@
                 </button>
             </div>
             <form id="tambah-form">
-                <div class="modal-body">
+                <div class="modal-body" style="height: 45vh;">
                     <div class="row">
                         <div class="col-md-6 mb-8 mb-sm-0">
                             <small class="text-muted pt-4 db">Rumusan</small>
                             <h6 id="showRupiah"></h6>
                             <h6 id="showJiwa"></h6>
+                            <input type="hidden" id="rumusan-id" name="rumusan_id" />
                             <small class="text-muted pt-4 db">Muzakki</small>
                             <h6 id="showMuzakki"></h6>
+                            <input type="hidden" id="muzakki-id" name="muzakki_id" />
                             <div id="showFamily"></div>
                         </div>
                         <div class="col-md-6">
-                            <h4 class="text-center mb-8"><b><u>Yang Harus Dibayar</u></b></h4>
+                            <h4 class="text-center mb-8"><b><u>Yang Harus Ditunaikan</u></b></h4>
                             <div class="d-flex justify-content-between mb-4">
                                 <div>
                                     <span class="text-primary">Nama</span>
@@ -150,7 +152,7 @@
 
             var satuan = 0;
             $('.satuan:visible').each(function() {
-                var value = Number($(this).text().replace(/\,/g, '.'));
+                var value = Number($(this).text().replace(/\(|\)/g, "").replace(/\./g, '').replace(/\,/g, '.'));
                 satuan += value;
             });
 
@@ -197,7 +199,9 @@
                     $('#tambah-modal').modal('show');
                     $('#showRupiah').text('Rp. ' + data.success.rumusan.rupiah.toLocaleString('id-ID') + ' per-' + data.success.rumusan.satuan);
                     $('#showJiwa').text(data.success.rumusan.jiwa.toLocaleString('id-ID') + " " + data.success.rumusan.satuan + ' per-Jiwa');
+                    $('#rumusan-id').val(data.success.rumusan_id);
                     $('#showMuzakki').text(data.success.muzakki.name);
+                    $('#muzakki-id').val(data.success.muzakki_id);
 
                     var html = '';
                     if(data.success.family.length > 0){
@@ -206,7 +210,7 @@
                         $.each(data.success.family, function(i, val){
                             html += '<div class="checkbox-inline d-flex pt-3" >';
                             html += '<label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">';
-                            html += '<input checked class="muzakki" type="checkbox" name="tambah_muzakki[]" value="{{Crypt::encrypt(' + val.id + ')}}" index="' + i + '" />';
+                            html += '<input checked class="muzakki" type="checkbox" name="tambah_muzakki[]" value="' + val.id + '" index="' + i + '" />';
                             html += '<span></span>' + val.name;
                             html += '</label>';
                             html += '</div>';
@@ -226,7 +230,7 @@
                     var nominalRupiah = Number(data.success.rumusan.rupiah * data.success.rumusan.jiwa);
                     var nominalSatuan = data.success.rumusan.jiwa;
                     $("#nominalMuzakki").text(nominalRupiah.toLocaleString('id-ID'));
-                    $("#satuanMuzakki").text("" + nominalSatuan.toLocaleString('id-ID') + "");
+                    $("#satuanMuzakki").text("(" + nominalSatuan.toLocaleString('id-ID') + ")");
                     //End Yang Harus Dibayar
 
                     totalRupiah += nominalRupiah;
@@ -243,7 +247,7 @@
                             html += '<h6>' + val.name + '</h6>';
                             html += '</div>';
                             html += '<div>';
-                            html += '<h6 class="index' + i + '"><span class="nominal">' + nominalRupiah.toLocaleString('id-ID') + '</span> <span class="satuan">' + nominalSatuan.toLocaleString('id-ID') + '</span></h6>';
+                            html += '<h6 class="index' + i + '"><span class="nominal">' + nominalRupiah.toLocaleString('id-ID') + '</span> <span class="satuan">(' + nominalSatuan.toLocaleString('id-ID') + ')</span></h6>';
                             html += '</div>';
                             html += '</div>';
 

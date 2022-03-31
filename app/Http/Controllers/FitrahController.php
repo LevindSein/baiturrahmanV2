@@ -67,6 +67,7 @@ class FitrahController extends Controller
     public function store(Request $request, $status)
     {
         if($request->ajax()){
+            // Hitungan
             if($status == 0){
                 //Validator
                 $input['rumusan'] = $request->check_rumusan;
@@ -78,7 +79,6 @@ class FitrahController extends Controller
                 ])->validate();
                 //End Validator
 
-                //Hitungan
                 $data = array();
                 try {
                     $rumusan = Rumusan::findOrFail($request->check_rumusan);
@@ -86,10 +86,11 @@ class FitrahController extends Controller
                 } catch(ModelNotFoundException $err) {
                     return response()->json(['error' => "Data lost."]);
                 }
-                //End Hitungan
 
                 $data['rumusan'] = json_decode($rumusan->rumus);
+                $data['rumusan_id'] = Crypt::encrypt($rumusan->id);
                 $data['muzakki'] = $muzakki;
+                $data['muzakki_id'] = Crypt::encrypt($muzakki->id);
 
                 $family = AnotherUser::where([
                     ['family', $muzakki->id],
@@ -101,10 +102,44 @@ class FitrahController extends Controller
                 }
 
                 return response()->json(['success' => $data]);
-            } else {
-                //Submit Zakat Fitrah
-                return response()->json(['success' => "Data berhasil disimpan."]);
             }
+            // End Hitungan
+            // Submit
+            else {
+                try {
+                    $decrypted = Crypt::decrypt($request->muzakki_id);
+                } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    return response()->json(['error' => "Data tidak valid."]);
+                }
+
+                try {
+                    $muzakki = Muzakki::findOrFail($decrypted);
+                } catch(ModelNotFoundException $err) {
+                    return response()->json(['error' => "Data lost."]);
+                }
+
+                $i = 0;
+                $another_muzakki = array();
+                $decrypted = '';
+                foreach($request->tambah_muzakki as $id){
+                    // try {
+                    //     $decrypted = Crypt::decrypt($id);
+                    // } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    //     return response()->json(['error' => "Data tidak valid."]);
+                    // }
+
+                    // try {
+                    //     $another_muzakki[$i] = Muzakki::findOrFail($decrypted);
+                    // } catch(ModelNotFoundException $err) {
+                    //     return response()->json(['error' => "Data lost."]);
+                    // }
+
+                    $i++;
+                }
+
+                return response()->json(['success' => "Data Berhasil Disimpan"]);
+            }
+            // End Submit
         }
     }
 

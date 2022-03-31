@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AnotherUser extends Model
 {
     use HasFactory;
+    use EncryptableDbAttribute;
+
     private $type;
     protected $table = 'another_user';
     protected $fillable = [
