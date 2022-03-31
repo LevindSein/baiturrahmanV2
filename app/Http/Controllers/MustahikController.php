@@ -104,6 +104,8 @@ class MustahikController extends Controller
             $data['stt_mustahik']  = 1;
             $data['type_mustahik'] = $input['kategori'];
 
+            $data['code'] = Mustahik::code();
+
             Mustahik::insert($data);
 
             return response()->json(['success' => 'Data berhasil ditambah.']);

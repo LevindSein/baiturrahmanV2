@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class AnotherUser extends Model
 {
     use HasFactory;
-    use EncryptableDbAttribute;
 
     private $type;
     protected $table = 'another_user';
     protected $fillable = [
+        'code',
         'name',
         'hp',
         'address',
@@ -23,6 +23,14 @@ class AnotherUser extends Model
         'stt_mustahik',
         'type_mustahik'
     ];
+
+    public static function code(){
+        $data = substr(str_shuffle(str_repeat("ABCDEFGHIJKLMNPQRSTUWXYZ",3)), 0, 10);
+
+        if(self::where('code', $data)->exists()) return self::code();
+
+        return $data;
+    }
 
     public static function kategori($type = 7){
         switch ($type) {

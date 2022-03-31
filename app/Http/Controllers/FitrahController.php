@@ -121,18 +121,13 @@ class FitrahController extends Controller
                 $i = 0;
                 $another_muzakki = array();
                 $decrypted = '';
-                foreach($request->tambah_muzakki as $id){
-                    // try {
-                    //     $decrypted = Crypt::decrypt($id);
-                    // } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-                    //     return response()->json(['error' => "Data tidak valid."]);
-                    // }
-
-                    // try {
-                    //     $another_muzakki[$i] = Muzakki::findOrFail($decrypted);
-                    // } catch(ModelNotFoundException $err) {
-                    //     return response()->json(['error' => "Data lost."]);
-                    // }
+                foreach($request->tambah_muzakki as $code){
+                    $another = Muzakki::where('code', $code)->first();
+                    if($another){
+                        $another_muzakki[$i] = $another;
+                    } else {
+                        return response()->json(['error' => "Data lost."]);
+                    }
 
                     $i++;
                 }

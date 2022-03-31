@@ -210,7 +210,7 @@
                         $.each(data.success.family, function(i, val){
                             html += '<div class="checkbox-inline d-flex pt-3" >';
                             html += '<label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">';
-                            html += '<input checked class="muzakki" type="checkbox" name="tambah_muzakki[]" value="' + val.id + '" index="' + i + '" />';
+                            html += '<input checked class="muzakki" type="checkbox" name="tambah_muzakki[]" value="' + val.code + '" index="' + i + '" />';
                             html += '<span></span>' + val.name;
                             html += '</label>';
                             html += '</div>';
@@ -218,7 +218,7 @@
                     }
                     $("#showFamily").html(html);
 
-                    //Yang Harus Dibayar
+                    //Yang Harus Ditunaikan
                     $("#showSatuan").text("Rupiah (" + data.success.rumusan.satuan + ")");
 
                     if(data.success.muzakki.name.length > 15){
@@ -231,7 +231,6 @@
                     var nominalSatuan = data.success.rumusan.jiwa;
                     $("#nominalMuzakki").text(nominalRupiah.toLocaleString('id-ID'));
                     $("#satuanMuzakki").text("(" + nominalSatuan.toLocaleString('id-ID') + ")");
-                    //End Yang Harus Dibayar
 
                     totalRupiah += nominalRupiah;
                     totalSatuan += nominalSatuan;
@@ -244,7 +243,11 @@
 
                             html += '<div class="d-flex justify-content-between">';
                             html += '<div>';
-                            html += '<h6>' + val.name + '</h6>';
+                            if(val.name.length > 15){
+                                html += '<h6>' + val.name.substring(0,15) + "..." + '</h6>';
+                            } else {
+                                html += '<h6>' + val.name + '</h6>';
+                            }
                             html += '</div>';
                             html += '<div>';
                             html += '<h6 class="index' + i + '"><span class="nominal">' + nominalRupiah.toLocaleString('id-ID') + '</span> <span class="satuan">(' + nominalSatuan.toLocaleString('id-ID') + ')</span></h6>';
@@ -256,6 +259,7 @@
                         })
                     }
                     $("#nominalFamily").html(html);
+                    //End Yang Harus Dibayar
 
                     $("#total").text(totalRupiah.toLocaleString('id-ID') + " (" + totalSatuan.toLocaleString('id-ID') + ")");
                 }

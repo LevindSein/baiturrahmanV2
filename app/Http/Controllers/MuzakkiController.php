@@ -111,6 +111,8 @@ class MuzakkiController extends Controller
                 $data['type_mustahik'] = $input['kategori'];
             }
 
+            $data['code'] = Muzakki::code();
+
             Muzakki::insert($data);
 
             return response()->json(['success' => 'Data berhasil ditambah.']);
