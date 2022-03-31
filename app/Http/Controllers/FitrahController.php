@@ -91,7 +91,11 @@ class FitrahController extends Controller
                 $data['rumusan'] = json_decode($rumusan->rumus);
                 $data['muzakki'] = $muzakki;
 
-                $family = AnotherUser::where('family', $muzakki->id)->get();
+                $family = AnotherUser::where([
+                    ['family', $muzakki->id],
+                    ['muzakki', 1],
+                    ['stt_muzakki', 1]
+                ])->get();
                 if($family){
                     $data['family'] = $family;
                 }

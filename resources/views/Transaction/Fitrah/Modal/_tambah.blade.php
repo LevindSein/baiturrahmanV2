@@ -44,7 +44,7 @@
             <form id="tambah-form">
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-8 mb-sm-0">
                             <small class="text-muted pt-4 db">Rumusan</small>
                             <h6 id="showRupiah"></h6>
                             <h6 id="showJiwa"></h6>
@@ -53,8 +53,32 @@
                             <div id="showFamily"></div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-
+                            <h4 class="text-center mb-8"><b><u>Yang Harus Dibayar</u></b></h4>
+                            <div class="d-flex justify-content-between mb-4">
+                                <div>
+                                    <span class="text-primary">Nama</span>
+                                </div>
+                                <div>
+                                    <span class="text-primary" id="showSatuan"></span>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 id="nameMuzakki"></h6>
+                                </div>
+                                <div>
+                                    <h6><span class="nominal" id="nominalMuzakki"></span> <span class="satuan" id="satuanMuzakki"></span></h6>
+                                </div>
+                            </div>
+                            <div id="nominalFamily"></div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="text-primary">TOTAL</h4>
+                                </div>
+                                <div>
+                                    <h4 class="text-primary" id="total"></h4>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,8 +127,41 @@
         }
     });
 
+    $('#tambah-modal').on('shown.bs.modal', function(e) {
+        e.preventDefault();
+
+        function muzakki(){
+            if($(this).is(":checked")){
+                $(".index" + $(this).attr("index")).show();
+            }
+            else{
+                $(".index" + $(this).attr("index")).hide();
+            }
+            totalBayar();
+        }
+        $('.muzakki').click(muzakki);
+
+        function totalBayar(){
+            var nominal = 0;
+            $('.nominal:visible').each(function() {
+                var value = Number($(this).text().replace(/\./g, ''));
+                nominal += value;
+            });
+
+            var satuan = 0;
+            $('.satuan:visible').each(function() {
+                var value = Number($(this).text().replace(/\,/g, '.'));
+                satuan += value;
+            });
+
+            $("#total").text('Rp. ' + nominal.toLocaleString('id-ID') + ' (' + satuan.toLocaleString('id-ID') + ')');
+        }
+    });
+
     $('#check-form').on('submit', function(e){
         e.preventDefault();
+        var totalRupiah = 0;
+        var totalSatuan = 0;
 
         $.ajaxSetup({
             headers: {
@@ -143,24 +200,60 @@
                     $('#showMuzakki').text(data.success.muzakki.name);
 
                     var html = '';
-                    var banyak = 0;
-                    if(data.success.family.length > 1){
-                        html += '<div class="form-group">';
-                        html += '<small class="text-muted pt-4 db">Keluarga</small>';
+                    if(data.success.family.length > 0){
+                        html += '<small class="text-muted pt-4 db">Anggota Keluarga</small>';
 
                         $.each(data.success.family, function(i, val){
-                            banyak++;
-                            html += '<div class="checkbox-inline d-flex pt-3">';
+                            html += '<div class="checkbox-inline d-flex pt-3" >';
                             html += '<label class="checkbox checkbox-outline checkbox-outline-2x checkbox-primary">';
-                            html += '<input checked type="checkbox" name="tambah_muzakki[]" value="' + '{{Crypt::encrypt(' + val.id + ')}}" />';
+                            html += '<input checked class="muzakki" type="checkbox" name="tambah_muzakki[]" value="{{Crypt::encrypt(' + val.id + ')}}" index="' + i + '" />';
                             html += '<span></span>' + val.name;
                             html += '</label>';
                             html += '</div>';
                         })
-
-                        html += '<div>'
                     }
                     $("#showFamily").html(html);
+
+                    //Yang Harus Dibayar
+                    $("#showSatuan").text("Rupiah (" + data.success.rumusan.satuan + ")");
+
+                    if(data.success.muzakki.name.length > 15){
+                        $("#nameMuzakki").text(data.success.muzakki.name.substring(0,15) + "...");
+                    } else {
+                        $("#nameMuzakki").text(data.success.muzakki.name);
+                    }
+
+                    var nominalRupiah = Number(data.success.rumusan.rupiah * data.success.rumusan.jiwa);
+                    var nominalSatuan = data.success.rumusan.jiwa;
+                    $("#nominalMuzakki").text(nominalRupiah.toLocaleString('id-ID'));
+                    $("#satuanMuzakki").text("" + nominalSatuan.toLocaleString('id-ID') + "");
+                    //End Yang Harus Dibayar
+
+                    totalRupiah += nominalRupiah;
+                    totalSatuan += nominalSatuan;
+
+                    var html = '';
+                    if(data.success.family.length > 0){
+                        $.each(data.success.family, function(i, val){
+                            var nominalRupiah = Number(data.success.rumusan.rupiah * data.success.rumusan.jiwa);
+                            var nominalSatuan = data.success.rumusan.jiwa;
+
+                            html += '<div class="d-flex justify-content-between">';
+                            html += '<div>';
+                            html += '<h6>' + val.name + '</h6>';
+                            html += '</div>';
+                            html += '<div>';
+                            html += '<h6 class="index' + i + '"><span class="nominal">' + nominalRupiah.toLocaleString('id-ID') + '</span> <span class="satuan">' + nominalSatuan.toLocaleString('id-ID') + '</span></h6>';
+                            html += '</div>';
+                            html += '</div>';
+
+                            totalRupiah += nominalRupiah;
+                            totalSatuan += nominalSatuan;
+                        })
+                    }
+                    $("#nominalFamily").html(html);
+
+                    $("#total").text(totalRupiah.toLocaleString('id-ID') + " (" + totalSatuan.toLocaleString('id-ID') + ")");
                 }
 
                 if(data.info){
